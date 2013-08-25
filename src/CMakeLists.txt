@@ -6,7 +6,7 @@ add_subdirectory(application)
 
 set(EXECUTABLE_OUTPUT_PATH ..)
 
-set(LIBS client server application)
+set(LIBS application server client)
 set(LIBS ${LIBS} pthread)
 
 file(GLOB COMMON_SRCS common/*.cpp)

@@ -10,14 +10,13 @@
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
+#include <string>
 
 using namespace server;
 
-ServerTCP::ServerTCP(const char* port)
-	: common::ISocketHandler(), in_sockfd(-1)
+ServerTCP::ServerTCP(const std::string& port)
+	: common::ISocketHandler(), in_sockfd(-1), port(port)
 {
-	strcpy(this->port, port);
-
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1)
 	{
@@ -27,7 +26,7 @@ ServerTCP::ServerTCP(const char* port)
 
 	sockaddr_in addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(atoi(port));
+	addr.sin_port = htons(atoi(port.c_str()));
 	addr.sin_addr.s_addr = INADDR_ANY;
 
 	if (bind(sockfd, (sockaddr*)&addr, sizeof(addr)) == -1)
@@ -56,10 +55,7 @@ void swap(ServerTCP& a, ServerTCP& b)
 {
 	std::swap(a.sockfd, b.sockfd);
 	std::swap(a.in_sockfd, b.in_sockfd);
-	char* tmp;
-	strcpy(tmp, b.port);
-	strcpy(b.port, a.port);
-	strcpy(a.port, tmp);
+	std::swap(a.port, b.port);
 }
 }
 
@@ -74,7 +70,7 @@ ServerTCP::~ServerTCP()
 {
 }
 
-void ServerTCP::send(void* msg, size_t size)
+void ServerTCP::send(void* msg, size_t size) const
 {
 	mutex.lock();
 	int st = write(in_sockfd, msg, size);
@@ -86,7 +82,7 @@ void ServerTCP::send(void* msg, size_t size)
 	}
 }
 
-void ServerTCP::receive(void* buf, size_t size)
+void ServerTCP::receive(void* buf, size_t size) const
 {
 	mutex.lock();
 	int st = read(in_sockfd, buf, size);
@@ -100,12 +96,12 @@ void ServerTCP::receive(void* buf, size_t size)
 
 void ServerTCP::closeConnection()
 {
-	close(sockfd);
+	close(in_sockfd);
 }
 
 void ServerTCP::closeMainConnection()
 {
-	close(in_sockfd);
+	close(sockfd);
 }
 
 ServerTCP ServerTCP::waitForSocket()
@@ -119,8 +115,9 @@ ServerTCP ServerTCP::waitForSocket()
 	mutex.unlock();
 	if (new_sockfd == -1)
 	{
-		return NULL;
-		//exit(1);
+		//return NULL;
+		perror("accept");
+		exit(1);
 	}
 	ServerTCP result = ServerTCP(*this);
 	result.in_sockfd = new_sockfd;

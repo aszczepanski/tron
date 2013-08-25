@@ -1,9 +1,10 @@
-#ifndef SERVERTCP_H
-#define SERVERTCP_H
+#ifndef SERVER_TCP_H
+#define SERVER_TCP_H
 
-#include "common/isocket_handler.h"
+#include <common/isocket_handler.h>
 #include <cstdlib>
-#include "common/mutex.h"
+#include <common/mutex.h>
+#include <string>
 
 namespace server
 {
@@ -12,25 +13,25 @@ class ServerTCP
 	: public common::ISocketHandler
 {
 public:
-	ServerTCP(const char* port);
+	ServerTCP(const std::string& port);
 	ServerTCP(const ServerTCP&);
 	ServerTCP& operator=(const ServerTCP&);
 	friend void swap(ServerTCP&, ServerTCP&);
 	~ServerTCP();
-	void send(void*, size_t);
-	void receive(void*, size_t);
+	void send(void*, size_t) const;
+	void receive(void*, size_t) const;
 	void closeConnection();
 	void closeMainConnection();
 	ServerTCP waitForSocket();
 private:
 	int sockfd;
 	int in_sockfd;
-	char* port;
+	std::string port;
 	static const unsigned short MAX_WAITING_SERVERS = 5;
 
-	common::Mutex mutex;
+	mutable common::Mutex mutex;
 };
 
 }
 
-#endif // SERVERTCP_H
+#endif // SERVER_TCP_H

@@ -8,10 +8,11 @@
 #include <errno.h>
 #include <cstdio>
 #include <cassert>
+#include <string>
 using namespace std;
 using namespace client;
 
-ClientTCP::ClientTCP(const char* hostname, const char* port)
+ClientTCP::ClientTCP(const string& hostname, const string& port)
 	: ISocketHandler(), hostname(hostname), port(port), connectionOpened(false)
 {
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -23,9 +24,9 @@ ClientTCP::ClientTCP(const char* hostname, const char* port)
 	
 	sockaddr_in addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(atoi(port));
+	addr.sin_port = htons(atoi(port.c_str()));
 	
-	if (inet_aton(hostname, (in_addr*)&addr.sin_addr.s_addr) == 0)
+	if (inet_aton(hostname.c_str(), (in_addr*)&addr.sin_addr.s_addr) == 0)
 	{
 		perror("aton error");
 		exit(0);
@@ -58,7 +59,7 @@ void ClientTCP::closeConnection()
 	close(sockfd);
 }
 
-void ClientTCP::send(void* msg, size_t size)
+void ClientTCP::send(void* msg, size_t size) const
 {
 	assert(connectionOpened);
 	mutex.lock();
@@ -72,7 +73,7 @@ void ClientTCP::send(void* msg, size_t size)
 	}
 }
 
-void ClientTCP::receive(void* buf, size_t size)
+void ClientTCP::receive(void* buf, size_t size) const
 {
 	assert(connectionOpened);
 	mutex.lock();
