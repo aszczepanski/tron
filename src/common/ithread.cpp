@@ -1,4 +1,4 @@
-#include "common/ithread.h"
+#include <common/ithread.h>
 #include <pthread.h>
 #include <iostream>
 #include <signal.h>
@@ -10,12 +10,12 @@ IThread::IThread()
 {
 }
 
-void IThread::Run()
+void IThread::run()
 {
 	pthread_create(&thread, NULL, static_routine, (void*)this);
 }
 
-void IThread::Wait()
+void IThread::wait()
 {
 	pthread_join(thread, NULL);
 }
@@ -26,7 +26,7 @@ void* IThread::static_routine(void* arg)
 	return thread->start_routine();
 }
 
-void IThread::Kill()
+void IThread::kill()
 {
 	//pthread_kill(thread, SIGALRM);
 }

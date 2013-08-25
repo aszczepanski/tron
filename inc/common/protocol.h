@@ -9,9 +9,16 @@ struct REQUEST
 	{
 		START_GAME,
 		END_GAME,
-		STAGE_INFO
+		NEW_TURN,
+		STAGE_INFO,
+		REGISTER_LISTENER
 	} request_type;
 	size_t length;
+};
+
+struct START_INFO
+{
+	unsigned short player_no;
 };
 
 struct TURN_INFO

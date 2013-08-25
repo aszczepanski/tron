@@ -20,14 +20,14 @@ void Application::run()
 	if (n == 1)
 	{
 		client::ServerListener sl("127.0.0.1", "6060");
-		sl.Run();
-		sl.Wait();
+		sl.run();
+		sl.wait();
 	}
 	else
 	{
 		server::ServerTCPListener cl("6060");
-		cl.Run();
-		cl.Wait();
+		cl.run();
+		cl.wait();
 	}
 
 }

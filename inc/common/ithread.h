@@ -10,9 +10,9 @@ class IThread
 {
 public:
 	IThread();
-	void Run();
-	void Wait();
-	void Kill();
+	void run();
+	void wait();
+	void kill();
 protected:
 	virtual void* start_routine() = 0;
 private:

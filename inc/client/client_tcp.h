@@ -1,9 +1,9 @@
-#ifndef CLIENTTCP_H
-#define CLIENTTCP_H
+#ifndef CLIENT_TCP_H
+#define CLIENT_TCP_H
 
-#include "common/isocket_handler.h"
+#include <common/isocket_handler.h>
 #include <cstdlib>
-#include "common/mutex.h"
+#include <common/mutex.h>
 #include <string>
 
 namespace client
@@ -31,4 +31,4 @@ private:
 
 }
 
-#endif // CLIENTTCP_H
+#endif // CLIENT_TCP_H

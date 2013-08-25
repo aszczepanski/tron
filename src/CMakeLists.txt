@@ -13,7 +13,8 @@ file(GLOB COMMON_SRCS common/*.cpp)
 
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
-add_definitions("-Wall")
+#add_definitions("-g -Wall")
+set(CMAKE_CXX_FLAGS "-g -Wall")
 
 add_executable(main main.cpp ${COMMON_SRCS})
 target_link_libraries(main ${LIBS})

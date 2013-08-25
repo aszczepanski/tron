@@ -1,5 +1,5 @@
-#ifndef ISOCKETHANDLER_H
-#define ISOCKETHANDLER_H
+#ifndef ISOCKET_HANDLER_H
+#define ISOCKET_HANDLER_H
 
 #include <cstdlib>
 
@@ -16,4 +16,4 @@ public:
 
 }
 
-#endif // ISOCKETHANDLER_H
+#endif // ISOCKET_HANDLER_H
