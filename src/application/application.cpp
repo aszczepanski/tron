@@ -1,7 +1,6 @@
 #include "application/application.h"
-#include <iostream>
+#include "common/logger.h"
 
-using namespace std;
 using namespace application;
 
 Application::Application()
@@ -11,5 +10,6 @@ Application::Application()
 void Application::run()
 {
 	int x = 3;
-	cout << "application" << endl;
+	common::Logger::getInstance().log("application");
+	common::Logger::getInstance().debug(x);
 }
