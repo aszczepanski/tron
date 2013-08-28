@@ -17,7 +17,7 @@ public:
 	~ClientTCP();
 	void send(void*, size_t) const;
 	void receive(void*, size_t) const;
-	void closeConnection();
+	void closeSocket();
 private:
 	ClientTCP(const ClientTCP&);
 	ClientTCP& operator=(const ClientTCP&);

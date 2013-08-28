@@ -15,15 +15,19 @@ ServerTCPListener::ServerTCPListener(const string& port)
 
 void* ServerTCPListener::start_routine()
 {
-	common::Logger::getInstance().log("ServerTCPListener");
+	common::Logger::getInstance().log("SERVER TCP Listener start");
 	// TODO test only
 	ServerTCP newServer = server.waitForSocket();
 
-	unsigned char c = 'x';
+	unsigned char c;
+
+	newServer.receive(&c, 1);
 	
 	common::Logger::getInstance().debug(static_cast<int>(c));
 
-	newServer.send(&c, 1);
+	newServer.closeConnection();
+
+	server.closeSocket();
 
 	return NULL;
 }

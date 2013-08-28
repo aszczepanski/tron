@@ -2,7 +2,7 @@
 #define SERVER_LISTENER_H
 
 #include <common/ithread.h>
-#include <client/client_tcp.h>
+#include <client/client_udp.h>
 #include <string>
 
 namespace client
@@ -15,7 +15,7 @@ public:
 	ServerListener(const std::string& hostname, const std::string& port);
 private:
 	void* start_routine();
-	ClientTCP client;
+	ClientUDP client;
 };
 
 }

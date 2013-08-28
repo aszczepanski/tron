@@ -44,3 +44,12 @@ void Logger::debug(const int x) const
 	cout << "\t" << x << endl;
 	mutex.unlock();
 }
+
+void Logger::error(const std::string&) const
+{
+	mutex.lock();
+	cout << "ERROR" << endl;
+	cout << "\t" << __FILE__ << endl;
+	cout << "\t" "line: " << __LINE__ << endl;
+	mutex.unlock();
+}

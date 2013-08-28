@@ -21,7 +21,7 @@ ServerTCP::ServerTCP(const std::string& port)
 	if (sockfd == -1)
 	{
 		perror("socket error");
-		exit(1);
+		throw SocketError();
 	}
 
 	sockaddr_in addr;
@@ -32,13 +32,13 @@ ServerTCP::ServerTCP(const std::string& port)
 	if (bind(sockfd, (sockaddr*)&addr, sizeof(addr)) == -1)
 	{
 		perror("bind error");
-		exit(1);
+		throw BindError();
 	}
 
 	if (listen(sockfd, MAX_WAITING_SERVERS) == -1)
 	{
 		perror("listen error");
-		exit(1);
+		throw ListenError();
 	}
 
 }
@@ -78,7 +78,7 @@ void ServerTCP::send(void* msg, size_t size) const
 	if (-1 == st)
 	{
 		perror("write error");
-		exit(1);
+		throw WriteError();
 	}
 }
 
@@ -90,16 +90,16 @@ void ServerTCP::receive(void* buf, size_t size) const
 	if (-1 == st)
 	{
 		perror("read error");
-		buf = NULL;
+		throw ReadError();
 	}
 }
 
-void ServerTCP::closeConnection()
+void ServerTCP::closeSocket()
 {
 	close(in_sockfd);
 }
 
-void ServerTCP::closeMainConnection()
+void ServerTCP::closeConnection()
 {
 	close(sockfd);
 }
@@ -115,9 +115,8 @@ ServerTCP ServerTCP::waitForSocket()
 	mutex.unlock();
 	if (new_sockfd == -1)
 	{
-		//return NULL;
 		perror("accept");
-		exit(1);
+		throw AcceptError();
 	}
 	ServerTCP result = ServerTCP(*this);
 	result.in_sockfd = new_sockfd;

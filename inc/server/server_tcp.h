@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <common/mutex.h>
 #include <string>
+#include <stdexcept>
 
 namespace server
 {
@@ -20,9 +21,15 @@ public:
 	~ServerTCP();
 	void send(void*, size_t) const;
 	void receive(void*, size_t) const;
+	void closeSocket();
 	void closeConnection();
-	void closeMainConnection();
 	ServerTCP waitForSocket();
+	class SocketError : public std::exception { };
+	class BindError : public std::exception { };
+	class ListenError : public std::exception { };
+	class AcceptError : public std::exception { };
+	class WriteError : public std::exception { };
+	class ReadError : public std::exception { };
 private:
 	int sockfd;
 	int in_sockfd;

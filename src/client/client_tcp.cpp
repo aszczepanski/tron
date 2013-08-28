@@ -53,7 +53,7 @@ ClientTCP::~ClientTCP()
 	mutex.unlock();
 }
 
-void ClientTCP::closeConnection()
+void ClientTCP::closeSocket()
 {
 	assert(connectionOpened);
 	close(sockfd);

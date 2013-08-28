@@ -14,6 +14,7 @@ public:
 	void log(const std::string&) const;
 	void debug(const std::string&) const;
 	void debug(const int x) const;
+	void error(const std::string&) const;
 private:
 	Logger();
 	Logger(const Logger&);
