@@ -21,7 +21,7 @@ ClientUDP::ClientUDP(const string& hostname, const string& port)
 	if (sock == -1)
 	{
 		perror("socket error");
-		exit(0);
+		throw SocketError();
 	}
 	
 	server.sin_family = AF_INET;
@@ -29,7 +29,7 @@ ClientUDP::ClientUDP(const string& hostname, const string& port)
 	if (hp == 0)
 	{
 		perror("Unknown host");
-		exit(0);
+		throw UnknownHostError();
 	}
 
 	bcopy((char*)hp->h_addr, (char*)&server.sin_addr, hp->h_length);
@@ -54,7 +54,7 @@ void ClientUDP::send(void* msg, size_t size) const
 	if (-1 == st)
 	{
 		perror("sendto error");
-		exit(0);
+		throw WriteError();
 	}
 }
 
@@ -67,6 +67,6 @@ void ClientUDP::receive(void* buf, size_t size) const
 	{
 		buf = NULL;
 		perror("recvfrom error");
-		exit(0);
+		throw ReadError();
 	}
 }

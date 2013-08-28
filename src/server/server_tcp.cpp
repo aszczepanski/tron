@@ -11,6 +11,7 @@
 #include <cstring>
 #include <algorithm>
 #include <string>
+#include <iostream>
 
 using namespace server;
 
@@ -96,12 +97,20 @@ void ServerTCP::receive(void* buf, size_t size) const
 
 void ServerTCP::closeSocket()
 {
-	close(in_sockfd);
+	std::cout << "sockfd = " << sockfd << std::endl;
+	if (close(sockfd) < 0)
+	{
+		perror("close sockfd");
+	}
 }
 
 void ServerTCP::closeConnection()
 {
-	close(sockfd);
+	std::cout << "in_sockfd = " << in_sockfd << std::endl;
+	if (close(in_sockfd) < 0)
+	{
+		perror("close in_sockfd");
+	}
 }
 
 ServerTCP ServerTCP::waitForSocket()
@@ -112,6 +121,7 @@ ServerTCP ServerTCP::waitForSocket()
 	
 	mutex.lock();
 	int new_sockfd = accept(sockfd, (sockaddr*)&in_addr, &socklen);
+	std::cout << "new_sockfd = " << new_sockfd << std::endl;
 	mutex.unlock();
 	if (new_sockfd == -1)
 	{

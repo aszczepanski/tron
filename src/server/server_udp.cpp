@@ -74,7 +74,7 @@ void ServerUDP::send(void* msg, size_t size) const
 	if (sendto(sock, msg, size, 0, (struct sockaddr*)&from, fromlen) == -1)
 	{
 		perror("sendto error");
-		throw SendError();
+		throw WriteError();
 	}
 }
 
@@ -83,7 +83,7 @@ void ServerUDP::receive(void* buf, size_t size) const
 	if (recvfrom(sock, buf, size, 0, (struct sockaddr*)&from, &fromlen) == -1)
 	{
 		perror("recvfrom error");
-		throw ReceiveError();
+		throw ReadError();
 	}
 }
 

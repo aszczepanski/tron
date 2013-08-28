@@ -25,6 +25,8 @@ void* ServerUDPListener::start_routine()
 		bzero(&request, sizeof(REQUEST));
 		server.receive(&request, sizeof(REQUEST));
 
+		// possible - request END
+
 		logger.debug(static_cast<int>(request.request_type));
 
 		ServerUDP newServer = server;
@@ -46,3 +48,4 @@ void* ServerUDPListener::start_routine()
 	pthread_exit(NULL);
 	return NULL;
 }
+

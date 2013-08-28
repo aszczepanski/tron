@@ -13,6 +13,7 @@ class ServerTCPListener
 {
 public:
 	ServerTCPListener(const std::string& port);
+	void closeSocket();
 private:
 	void* start_routine();
 	ServerTCP server;

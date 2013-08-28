@@ -22,10 +22,6 @@ public:
 	~ServerUDP();
 	void send(void*, size_t) const;
 	void receive(void*, size_t) const;
-	class SocketError : public std::exception { };
-	class BindError : public std::exception { };
-	class SendError : public std::exception { };
-	class ReceiveError : public std::exception { };
 private:
 	int sock;
 	mutable socklen_t length;

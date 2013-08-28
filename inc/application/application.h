@@ -9,6 +9,9 @@ class Application
 public:
 	Application();
 	void run();
+private:
+	void clientApplication();
+	void serverApplication();
 };
 
 }

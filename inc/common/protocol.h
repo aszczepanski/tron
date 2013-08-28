@@ -3,14 +3,18 @@
 
 #include <cstdlib>
 
+#define TOKEN_SIZE 20
+
 struct REQUEST
 {
 	enum
 	{
 		START_GAME,
+		LEAVE_GAME,
 		END_GAME,
 		NEW_TURN,
 		STAGE_INFO,
+		REGISTER_TOKEN,
 		REGISTER_LISTENER
 	} request_type;
 	size_t length;

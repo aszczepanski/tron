@@ -24,12 +24,6 @@ public:
 	void closeSocket();
 	void closeConnection();
 	ServerTCP waitForSocket();
-	class SocketError : public std::exception { };
-	class BindError : public std::exception { };
-	class ListenError : public std::exception { };
-	class AcceptError : public std::exception { };
-	class WriteError : public std::exception { };
-	class ReadError : public std::exception { };
 private:
 	int sockfd;
 	int in_sockfd;
