@@ -20,6 +20,7 @@ void* ServerUDPListener::start_routine()
 	common::Logger& logger = common::Logger::getInstance();
 	logger.log("SERVER UDP Listener start");
 
+	while (true)
 	{
 		REQUEST request;
 		bzero(&request, sizeof(REQUEST));

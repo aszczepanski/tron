@@ -26,10 +26,22 @@ void ServerSender::endGame()
 	client.send(&request, sizeof(REQUEST));
 }
 
+void ServerSender::leaveGame()
+{
+	REQUEST request;
+	bzero(&request, sizeof(REQUEST));
+	request.request_type = REQUEST::LEAVE_GAME;
+	request.length = 0;
+
+	client.send(&request, sizeof(REQUEST));
+}
+
 void ServerSender::registerClient(std::string& token)
 {
 	REQUEST request;
 	bzero(&request, sizeof(REQUEST));
+	request.request_type = REQUEST::REGISTER_TOKEN;
+
 	client.receive(&request, sizeof(REQUEST));
 
 	std::cout << "\t\t" << request.length << std::endl;

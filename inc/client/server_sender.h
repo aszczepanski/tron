@@ -13,6 +13,7 @@ public:
 	ServerSender(const std::string& hostname, const std::string& port);
 	void registerClient(std::string& token);
 	void endGame();
+	void leaveGame();
 	void sendTurn();
 	void closeSocket();
 private:
