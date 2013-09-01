@@ -1,4 +1,4 @@
 tron
 ====
 
-Gra Tron - projekt na grafikę komputerową
+Tron - computer graphics project
