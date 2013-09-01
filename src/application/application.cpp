@@ -21,31 +21,41 @@ void Application::run()
 	common::Logger& logger = common::Logger::getInstance();
 	logger.log("starting application");
 
-	int n;
-	std::cout << "1 - client test" << std::endl
-		<< "2 - server test" << std::endl;
-	std::cin >> n;
-
-	if (n == 1)
+	//while (true)
 	{
-		client::Application clientApp(false);
-		clientApp.run();
-		clientApp.wait();
-	}
-	else
-	{
-		server::Application serverApp;
-		serverApp.run();
+		int n;
+		std::cout << "1 - client test" << std::endl
+			<< "2 - server test" << std::endl
+			<< "3 - quit" << std::endl;
+		std::cin >> n;
 
-		sleep(1);
+		if (1 == n)
+		{
+			client::Application clientApp(false);
+			clientApp.run();
+			clientApp.wait();
+		}
+		else if (2 == n)
+		{
+			server::Application serverApp;
+			serverApp.run();
 
-		client::Application clientApp(true);
+			sleep(1);
 
-		clientApp.run();
-	
+			client::Application clientApp(true);
 
-		clientApp.wait();
-//		serverApp.wait();
+			clientApp.run();
+		
+
+			clientApp.wait();
+
+			// TODO closing connection on server side
+			//serverApp.wait();
+		}
+		else
+		{
+			//break;
+		}
 	}
 
 }

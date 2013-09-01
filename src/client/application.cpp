@@ -32,7 +32,6 @@ void* Application::start_routine()
 		OpenGLMain ogl(sharedMemory);
 		ogl.run();
 
-		// TODO closing connection on server side
 		serverListener.wait();
 
 		common::Logger::getInstance().log("client application closing...");
