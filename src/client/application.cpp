@@ -6,11 +6,13 @@
 #include <common/logger.h>
 #include <iostream>
 #include <cstdio>
+#include <unistd.h>
+#include <client/open_gl_main.h>
 
 using namespace client;
 
 Application::Application(bool host, const std::string& hostName, const std::string& portName)
-	: host(host), serverSender(hostName, portName), serverListener(hostName, portName)
+	: host(host), sharedMemory(SharedMemory::getInstance()), serverSender(hostName, portName, sharedMemory), serverListener(hostName, portName, sharedMemory)
 {
 }
 
@@ -18,29 +20,20 @@ void* Application::start_routine()
 {
 	try
 	{
-		std::string token;
-
 		// TCP test
-		serverSender.registerClient(token);
+		serverSender.registerClient();
 
 		// UDP test
 		serverListener.run();
 
-		// do something now...
-		getchar();
+		sharedMemory.setServerSender(&serverSender);
+		sharedMemory.setHost(host);
 
-		if (host)
-		{
-			//serverSender.endGame();
-		}
-		else
-		{
-			serverSender.endGame(); // TODO temporary
-		}
+		OpenGLMain ogl(sharedMemory);
+		ogl.run();
 
+		// TODO closing connection on server side
 		serverListener.wait();
-
-		serverSender.leaveGame();
 
 		common::Logger::getInstance().log("client application closing...");
 

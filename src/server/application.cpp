@@ -12,20 +12,19 @@ void* Application::start_routine()
 	int n;
 	try
 	{
+		SharedMemory sharedMemory;
+
 		// TCP test
-		server::ServerTCPListener cl("6060");
+		server::ServerTCPListener cl("6060", sharedMemory);
 		cl.run();
 
 		// UDP test
-		server::ServerUDPListener sl("6060");
+		server::ServerUDPListener sl("6060", sharedMemory);
 		sl.run();
-
-//		std::cout << "1 - client test\n"
-//			<< "2 - quit\n";
-//		std::cin >> n;
 
 		cl.wait();
 		sl.wait();
+		std::cout << "server app leaving\n";
 	}
 	catch (...)
 	{

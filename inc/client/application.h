@@ -18,7 +18,7 @@ public:
 private:
 	void* start_routine();
 	bool host;
-	SharedMemory sharedMemory;
+	SharedMemory& sharedMemory;
 	ServerSender serverSender;
 	ServerListener serverListener;
 };

@@ -87,3 +87,33 @@ void ServerUDP::receive(void* buf, size_t size) const
 	}
 }
 
+// it is possibly wrong
+namespace server
+{
+bool operator>(const ServerUDP& a, const ServerUDP& b)
+{
+	if (1 == strcmp(((struct sockaddr*)&a.from)->sa_data, ((struct sockaddr*)&b.from)->sa_data))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool operator<(const ServerUDP& a, const ServerUDP& b)
+{
+	if (-1 == strcmp(((struct sockaddr*)&a.from)->sa_data, ((struct sockaddr*)&b.from)->sa_data))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool operator==(const ServerUDP& a, const ServerUDP& b)
+{
+	if (0 == strcmp(((struct sockaddr*)&a.from)->sa_data, ((struct sockaddr*)&b.from)->sa_data))
+	{
+		return true;
+	}
+	return false;
+}
+}

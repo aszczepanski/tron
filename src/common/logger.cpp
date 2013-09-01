@@ -29,8 +29,6 @@ void Logger::debug(const string& s) const
 {
 	mutex.lock();
 	cout << "DEBUG" << endl;
-	cout << "\t" << __FILE__ << endl;
-	cout << "\t" "line: " << __LINE__ << endl;
 	cout << "\t" << s << endl;
 	mutex.unlock();
 }
@@ -39,17 +37,14 @@ void Logger::debug(const int x) const
 {
 	mutex.lock();
 	cout << "DEBUG" << endl;
-	cout << "\t" << __FILE__ << endl;
-	cout << "\t" "line: " << __LINE__ << endl;
 	cout << "\t" << x << endl;
 	mutex.unlock();
 }
 
-void Logger::error(const std::string&) const
+void Logger::error(const std::string& s) const
 {
 	mutex.lock();
 	cout << "ERROR" << endl;
-	cout << "\t" << __FILE__ << endl;
-	cout << "\t" "line: " << __LINE__ << endl;
+	cout << "\t" << s << endl;
 	mutex.unlock();
 }

@@ -4,6 +4,7 @@
 #include <set>
 #include <cstdlib>
 #include <server/server_udp.h>
+#include <server/player.h>
 
 namespace server
 {
@@ -11,11 +12,13 @@ namespace server
 class SharedMemory
 {
 public:
-	void addServerUDP();
-	void removeServerUDP();
+	void addPlayer(const std::string& token, const ServerUDP&);
+	void removePlayer(const std::string& token);
+	void removePlayer(const std::string& token, const ServerUDP&);
 	void sendUDPbroadcast(void* msg, size_t size);
 private:
-	std::set<ServerUDP> serversUDP;
+	ServerUDP getServerUDP(const std::string& token);
+	std::set<Player> players;
 };
 
 }

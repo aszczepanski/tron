@@ -8,6 +8,7 @@
 #include <server/server_udp_listener.h>
 #include <server/application.h>
 #include <client/application.h>
+#include <unistd.h>
 
 using namespace application;
 
@@ -34,12 +35,17 @@ void Application::run()
 	else
 	{
 		server::Application serverApp;
+		serverApp.run();
+
+		sleep(1);
+
 		client::Application clientApp(true);
 
-		serverApp.run();
-	//	clientApp.run();
+		clientApp.run();
 	
-		serverApp.wait();
+
+		clientApp.wait();
+//		serverApp.wait();
 	}
 
 }

@@ -3,6 +3,7 @@
 #include <common/ithread.h>
 #include <common/logger.h>
 #include <common/protocol.h>
+#include <server/shared_memory.h>
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -10,8 +11,8 @@
 using namespace std;
 using namespace server;
 
-ServerUDPListener::ServerUDPListener(const string& port)
-	: IThread(), server(port)
+ServerUDPListener::ServerUDPListener(const string& port, SharedMemory& sharedMemory)
+	: IThread(), server(port), sharedMemory(sharedMemory)
 {
 }
 
@@ -26,11 +27,25 @@ void* ServerUDPListener::start_routine()
 		bzero(&request, sizeof(REQUEST));
 		server.receive(&request, sizeof(REQUEST));
 
-		// possible - request END
+		if (request.request_type == REQUEST::END_GAME)
+		{
+			logger.debug("SERVER UDP end request");
+			break;
+		}
 
 		logger.debug(static_cast<int>(request.request_type));
 
 		ServerUDP newServer = server;
+
+		unsigned char c;
+		string token;
+		for (int i=0; i<request.length; i++)
+		{
+			newServer.receive(&c, 1);
+			token += c;
+		}
+
+		sharedMemory.addPlayer(token, newServer);
 
 		if (request.request_type == REQUEST::REGISTER_LISTENER)
 		{
@@ -41,7 +56,7 @@ void* ServerUDPListener::start_routine()
 			logger.error("SERVER UDP unknown request");
 		}
 
-		unsigned char c = 'a';
+		c = 'a';
 		newServer.send(&c, 1);
 
 	}

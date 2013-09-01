@@ -22,6 +22,10 @@ public:
 	~ServerUDP();
 	void send(void*, size_t) const;
 	void receive(void*, size_t) const;
+
+	friend bool operator>(const ServerUDP&, const ServerUDP&);
+	friend bool operator<(const ServerUDP&, const ServerUDP&);
+	friend bool operator==(const ServerUDP&, const ServerUDP&);
 private:
 	int sock;
 	mutable socklen_t length;
