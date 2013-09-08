@@ -20,6 +20,9 @@ public:
 	void keyEsc();
 	bool isHost() const;
 	void setHost(bool host);
+
+	bool setEnd();
+	bool getEnd() const;
 private:
 	SharedMemory();
 	SharedMemory(const SharedMemory&);
@@ -28,6 +31,8 @@ private:
 	ServerSender* serverSender;
 	unsigned short menuPos;
 	bool host;
+
+	bool end;
 };
 
 }

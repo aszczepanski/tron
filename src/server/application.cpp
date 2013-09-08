@@ -4,10 +4,13 @@
 #include <server/server_tcp_listener.h>
 #include <server/server_udp_listener.h>
 #include <iostream>
+#include <server/player.h>
+#include <vector>
+#include <unistd.h>
+#include <sys/types.h>
+#include <signal.h>
 
-using namespace server;
-
-void* Application::start_routine()
+void* server::Application::start_routine()
 {
 	int n;
 	try
@@ -22,8 +25,17 @@ void* Application::start_routine()
 		server::ServerUDPListener sl("6060", sharedMemory);
 		sl.run();
 
+		for (int i=0; i<15; i++)
+//		while(!sharedMemory.getEnd())
+		{
+			sharedMemory.updatePositions();
+
+			usleep(500000u);
+		}
+
 		cl.wait();
 		sl.wait();
+
 		std::cout << "server app leaving\n";
 	}
 	catch (...)

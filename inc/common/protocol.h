@@ -2,6 +2,7 @@
 #define PROTOCOL_H
 
 #include <cstdlib>
+#include <common/move.h>
 
 #define TOKEN_SIZE 20
 
@@ -28,12 +29,14 @@ struct START_INFO
 struct TURN_INFO
 {
 	unsigned short player_no;
-	unsigned long long move_no;
-	struct
-	{
-		int x;
-		int y;
-	} point;
+	common::Move move;
+};
+
+struct PLAYER_INFO
+{
+	unsigned short player_no;
+	int x,y;
+	common::Direction direction;
 };
 
 #endif // PROTOCOL_H

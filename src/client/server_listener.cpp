@@ -42,6 +42,7 @@ void* ServerListener::start_routine()
 	{
 		bzero(&request, sizeof(REQUEST));
 		client.receive(&request, sizeof(REQUEST));
+		cout << request.length << endl;
 
 		if (request.request_type == REQUEST::END_GAME)
 		{
@@ -66,9 +67,32 @@ void* ServerListener::start_routine()
 		}
 		else if (request.request_type == REQUEST::STAGE_INFO)
 		{
-			unsigned char c;
-			client.receive(&c, 1);
-			std::cout << c << " received\n";
+			cout << "CLIENT stage info received\n";
+
+			for (int i=0; i<request.length; i++)
+			{
+				PLAYER_INFO playerInfo;
+				client.receive(&playerInfo, sizeof(PLAYER_INFO));
+
+				cout << "playerInfo.player_no: " << playerInfo.player_no << std::endl;
+			}
+			
+		}
+		else if (request.request_type = REQUEST::NEW_TURN)
+		{
+			cout << "request.length: " << request.length << endl;
+			for (int i=0; i<request.length; i++)
+			{
+				TURN_INFO newTurn;
+				memset(&newTurn, 0, sizeof(TURN_INFO));
+				client.receive(&newTurn, sizeof(TURN_INFO));
+			
+				std::cout << "player: " << newTurn.player_no << std::endl;
+				cout << newTurn.move.x << " " << newTurn.move.y << endl;
+				cout.flush();
+				std::cout << "direction: " << newTurn.move.direction << std::endl;
+				cout.flush();
+			}
 		}
 	}
 

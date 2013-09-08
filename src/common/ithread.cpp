@@ -25,8 +25,9 @@ void* IThread::static_routine(void* arg)
 	IThread* thread = (IThread*)arg;
 	return thread->start_routine();
 }
-
+/*
 void IThread::kill()
 {
 	//pthread_kill(thread, SIGALRM);
 }
+*/

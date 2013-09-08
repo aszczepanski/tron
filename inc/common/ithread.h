@@ -12,7 +12,7 @@ public:
 	IThread();
 	void run();
 	void wait();
-	void kill();
+//	void kill();
 protected:
 	virtual void* start_routine() = 0;
 private:

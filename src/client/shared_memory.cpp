@@ -6,7 +6,7 @@ using namespace client;
 using namespace std;
 
 SharedMemory::SharedMemory()
-	: host(false)
+	: host(false), end(false)
 {
 }
 
@@ -43,12 +43,12 @@ void SharedMemory::setServerSender(ServerSender* server)
 
 void SharedMemory::keyLeft()
 {
-	serverSender->sendByte('l');
+	serverSender->sendTurn(common::WEST);
 }
 
 void SharedMemory::keyRight()
 {
-	serverSender->sendByte('r');
+	serverSender->sendTurn(common::EAST);
 }
 
 void SharedMemory::keyEsc()
@@ -61,4 +61,14 @@ void SharedMemory::keyEsc()
 	{
 		serverSender->leaveGame();
 	}
+}
+
+bool SharedMemory::setEnd()
+{
+	end = true;
+}
+
+bool SharedMemory::getEnd() const
+{
+	return end;
 }

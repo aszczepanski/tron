@@ -4,6 +4,7 @@
 #include <client/client_tcp.h>
 #include <string>
 #include <client/shared_memory.h>
+#include <common/move.h>
 
 namespace client
 {
@@ -15,7 +16,8 @@ public:
 	void registerClient();
 	void endGame();
 	void leaveGame();
-	void sendTurn();
+	void sendTurn(common::Direction);
+	void getStageInfo();
 	void sendByte(unsigned char c);
 	void closeSocket();
 private:

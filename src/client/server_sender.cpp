@@ -72,18 +72,32 @@ void ServerSender::registerClient()
 	sharedMemory.setToken(token);
 }
 
-void ServerSender::sendTurn()
+void ServerSender::sendTurn(common::Direction direction)
 {
-	char msg[] = "a";
-	client.send(msg, strlen(msg));
+	REQUEST request;
+	request.request_type = REQUEST::NEW_TURN;
+
+	client.send(&request, sizeof(REQUEST));
+	client.send(&direction, sizeof(common::Direction));
 }
 
 void ServerSender::sendByte(unsigned char c)
 {
+	std::cout << "sendByte()\n";
 	REQUEST request;
 	bzero(&request, sizeof(REQUEST));
-	request.request_type = REQUEST::STAGE_INFO;
+	request.request_type = REQUEST::NEW_TURN;
 	request.length = 1;
 	client.send(&request, sizeof(REQUEST));
 	client.send(&c, 1);
+}
+
+void ServerSender::getStageInfo()
+{
+	REQUEST request;
+	memset(&request, 0, sizeof(REQUEST));
+	request.request_type = REQUEST::STAGE_INFO;
+	request.length = 0;
+
+	client.send(&request, sizeof(REQUEST));
 }

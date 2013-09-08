@@ -14,12 +14,13 @@ OpenGLMain::OpenGLMain(SharedMemory& sharedMemory)
 {
 	int argc = 1;
 	char* argv[] = { "main" };
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(800,800);
 	glutInitWindowPosition(0,0);
 	glutCreateWindow("Awesome Game");        
-//	glutDisplayFunc(displayFrame);
+	glutDisplayFunc(displayFrame);
 //	glutIdleFunc(nextFrame);
 	glewInit();
 	glutSpecialFunc(keyDown);
@@ -31,6 +32,14 @@ OpenGLMain::OpenGLMain(SharedMemory& sharedMemory)
 void* OpenGLMain::start_routine()
 {
 	glutMainLoop();
+}
+
+void OpenGLMain::displayFrame()
+{
+	glClearColor(0,0,0,1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glutSwapBuffers();
 }
 
 void OpenGLMain::keyDown(int c, int x, int y)
@@ -46,7 +55,7 @@ void OpenGLMain::keyDown(int c, int x, int y)
 		SharedMemory::getInstance().keyRight();
 		break;
 	case GLUT_KEY_F1:
-		printf("enter\n");
+		printf("F1 [escape]\n");
 		SharedMemory::getInstance().keyEsc();
 		break;
 	}
