@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <common/move.h>
+#include <common/player_data.h>
 
 #define TOKEN_SIZE 20
 
@@ -14,6 +15,7 @@ struct REQUEST
 		LEAVE_GAME,
 		END_GAME,
 		NEW_TURN,
+		NEW_CRASH,
 		STAGE_INFO,
 		REGISTER_TOKEN,
 		REGISTER_LISTENER
@@ -32,11 +34,11 @@ struct TURN_INFO
 	common::Move move;
 };
 
-struct PLAYER_INFO
+struct CRASH_INFO
 {
 	unsigned short player_no;
-	int x,y;
-	common::Direction direction;
+	common::Move move;
 };
+
 
 #endif // PROTOCOL_H

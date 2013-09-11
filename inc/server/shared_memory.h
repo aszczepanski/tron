@@ -8,6 +8,7 @@
 #include <server/server_udp.h>
 #include <server/player.h>
 #include <common/move.h>
+#include <common/mutex.h>
 
 namespace server
 {
@@ -34,13 +35,25 @@ public:
 
 	bool getEnd() const;
 	void setEnd();
+
+	bool getStart() const;
+	void setStart();
+
+	static common::Mutex UDPMutex;
 private:
 	ServerUDP getServerUDP(const std::string& token);
 	std::set<Player> players;
 	
 	std::vector< std::pair<Player, common::Move> > moves;
 
+	mutable common::Mutex startMutex;
+	mutable common::Mutex playersMutex;
+	mutable common::Mutex broadcastMutex;
+
 	bool end;
+	bool start;
+
+	void checkIntersections();
 };
 
 }

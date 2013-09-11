@@ -17,6 +17,16 @@ void ServerSender::closeSocket()
 	client.closeSocket();
 }
 
+void ServerSender::startGame()
+{
+	REQUEST request;
+	memset(&request, 0, sizeof(REQUEST));
+	request.request_type = REQUEST::START_GAME;
+	request.length = 0; // TODO here token
+
+	client.send(&request, sizeof(REQUEST));
+}
+
 void ServerSender::endGame()
 {
 	REQUEST request;
@@ -83,7 +93,6 @@ void ServerSender::sendTurn(common::Direction direction)
 
 void ServerSender::sendByte(unsigned char c)
 {
-	std::cout << "sendByte()\n";
 	REQUEST request;
 	bzero(&request, sizeof(REQUEST));
 	request.request_type = REQUEST::NEW_TURN;

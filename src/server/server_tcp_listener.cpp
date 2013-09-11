@@ -32,7 +32,7 @@ void* ServerTCPListener::start_routine()
 		ServerTCPConnection* newConnection = new ServerTCPConnection(newServer, sharedMemory);
 		newConnection->run();
 //		newConnection->wait();
-		cout << "SERVER TCP Listener connection closed" << endl;
+		cout << "SERVER TCP Listener connection established" << endl;
 	}
 
 	server.closeSocket();

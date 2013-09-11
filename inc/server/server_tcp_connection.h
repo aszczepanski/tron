@@ -4,6 +4,7 @@
 #include <common/ithread.h>
 #include <server/shared_memory.h>
 #include <server/server_tcp.h>
+#include <common/mutex.h>
 
 namespace server
 {

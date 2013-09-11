@@ -25,12 +25,20 @@ void* server::Application::start_routine()
 		server::ServerUDPListener sl("6060", sharedMemory);
 		sl.run();
 
-		for (int i=0; i<15; i++)
-//		while(!sharedMemory.getEnd())
+		while (!sharedMemory.getStart())
+		{
+			std::cout << "\t\t\t" << sharedMemory.getStart() << std::endl;
+			sleep(1);
+		}
+
+		std::cout << "\t\tstarting\n";
+
+		//for (int i=0; i<15; i++)
+		while(!sharedMemory.getEnd())
 		{
 			sharedMemory.updatePositions();
 
-			usleep(500000u);
+			usleep(200000u);
 		}
 
 		cl.wait();

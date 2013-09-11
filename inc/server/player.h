@@ -4,6 +4,8 @@
 #include <string>
 #include <server/server_udp.h>
 #include <common/move.h>
+#include <common/player_data.h>
+#include <common/mutex.h>
 
 namespace server
 {
@@ -11,7 +13,7 @@ namespace server
 class Player
 {
 public:
-	Player(const std::string& token, const ServerUDP&);
+	Player(const std::string& token, const ServerUDP&, int x=0, int y=0, common::Direction direction=common::NORTH);
 	Player(const Player&);
 	Player& operator=(const Player&);
 
@@ -44,6 +46,8 @@ private:
 
 	mutable int x,y;
 	mutable common::Direction direction;
+
+	mutable common::Mutex mutex;
 };
 
 }

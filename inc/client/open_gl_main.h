@@ -16,6 +16,7 @@ private:
 	void* start_routine();
 	static void keyDown(int c, int x, int y);
 	static void displayFrame();
+	static void nextFrame();
 	SharedMemory& sharedMemory;
 	static SharedMemory* shm;
 };

@@ -6,11 +6,24 @@
 #include <string>
 #include <cstring>
 #include <cstdio>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "cube.h"
+#include <vector>
+#include <iostream>
 
 using namespace client;
 
+static float xAngle = 0.0f;
+static float yAngle = 0.0f;
+
 OpenGLMain::OpenGLMain(SharedMemory& sharedMemory)
 	: IThread(), sharedMemory(sharedMemory)
+{
+}
+
+void* OpenGLMain::start_routine()
 {
 	int argc = 1;
 	char* argv[] = { "main" };
@@ -21,23 +34,126 @@ OpenGLMain::OpenGLMain(SharedMemory& sharedMemory)
 	glutInitWindowPosition(0,0);
 	glutCreateWindow("Awesome Game");        
 	glutDisplayFunc(displayFrame);
-//	glutIdleFunc(nextFrame);
+	glutIdleFunc(nextFrame);
 	glewInit();
 	glutSpecialFunc(keyDown);
 //	glutSpecialUpFunc(keyUp);
 
 	glEnable(GL_DEPTH_TEST);
-}
 
-void* OpenGLMain::start_routine()
-{
+/*	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	glShadeModel(GL_SMOOTH);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_COLOR_MATERIAL);
+*/
 	glutMainLoop();
 }
 
 void OpenGLMain::displayFrame()
 {
+	std::vector<PLAYER_INFO> positions;
+	std::vector<TURN_INFO> turns;
+	SharedMemory::getInstance().getPositions(positions);
+	SharedMemory::getInstance().getTurns(turns);
+
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 V=glm::lookAt(
+		glm::vec3(xAngle,yAngle,-40.0f),
+		glm::vec3(0.0f,0.0f,0.0f),
+		glm::vec3(0.0f,1.0f,0.0f));
+
+	glm::mat4 P=glm::perspective(50.0f, 1.0f, 1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(glm::value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+	for (int i=0; i<positions.size(); i++)
+	//if (!positions.empty())
+	{
+
+		glm::mat4 M=glm::mat4(1.0f);
+		M=glm::rotate(M,0.0f,glm::vec3(0.0f,1.0f,0.0f));
+		M=glm::rotate(M,0.0f,glm::vec3(1.0f,0.0f,0.0f));
+//		if (!positions.empty())
+		{
+//			if ((positions[i].x != 0) || (positions[i].y != 0))
+//				std::cout << "ogl1: " << positions[i].x << " " << positions[i].y << std::endl;
+			M=glm::translate(M, glm::vec3((float)positions[i].x, (float)positions[i].y, 0.0f));
+			//M=glm::translate(M, glm::vec3((float)positions.back().x, (float)positions.back().y, 0.0f));
+//			if ((positions[i].x != 0) || (positions[i].y != 0))
+//				std::cout << "ogl2: " << positions[i].x << " " << positions[i].y << std::endl;
+		}
+
+		glLoadMatrixf(glm::value_ptr(V*M));
+
+//		glColor3d(1.0, 1.0, 0.0);
+//		glutSolidCube(0.5);
+
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+		glVertexPointer(3,GL_FLOAT,0,cubeVertices);
+		glColorPointer(3,GL_FLOAT,0,cubeColors);
+		glDrawArrays(GL_QUADS,0,cubeVertexCount);
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);	
+
+	}
+
+	for (std::vector<TURN_INFO>::iterator it = turns.begin(); it != turns.end(); it++)
+	{
+		if (it != turns.end()-1)
+		{
+			glm::mat4 M=glm::mat4(1.0f);
+			M=glm::rotate(M,0.0f,glm::vec3(0.0f,1.0f,0.0f));
+			M=glm::rotate(M,0.0f,glm::vec3(1.0f,0.0f,0.0f));
+
+			M=glm::translate(M, glm::vec3(it->move.x, it->move.y, 0.0f));
+
+			glLoadMatrixf(glm::value_ptr(V*M));
+
+	//		glColor3d(1.0, 1.0, 0.0);
+	//		glutSolidCube(0.5);
+
+
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_COLOR_ARRAY);
+			glVertexPointer(3,GL_FLOAT,0,cubeVertices);
+			glColorPointer(3,GL_FLOAT,0,cubeColors);
+			glDrawArrays(GL_QUADS,0,cubeVertexCount);
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_COLOR_ARRAY);	
+		}
+		else
+		{
+			glm::mat4 M=glm::mat4(1.0f);
+			M=glm::rotate(M,0.0f,glm::vec3(0.0f,1.0f,0.0f));
+			M=glm::rotate(M,0.0f,glm::vec3(1.0f,0.0f,0.0f));
+
+			M=glm::translate(M, glm::vec3(it->move.x, it->move.y, 0.0f));
+
+			glLoadMatrixf(glm::value_ptr(V*M));
+
+	//		glColor3d(1.0, 1.0, 0.0);
+	//		glutSolidCube(0.5);
+
+
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_COLOR_ARRAY);
+			glVertexPointer(3,GL_FLOAT,0,cubeVertices);
+			glColorPointer(3,GL_FLOAT,0,cubeColors);
+			glDrawArrays(GL_QUADS,0,cubeVertexCount);
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_COLOR_ARRAY);	
+		}
+
+	}
 
 	glutSwapBuffers();
 }
@@ -47,16 +163,39 @@ void OpenGLMain::keyDown(int c, int x, int y)
 	switch(c)
 	{
 	case GLUT_KEY_LEFT:
-		printf("left\n");
+		printf("[left]\n");
 		SharedMemory::getInstance().keyLeft();
 		break;
 	case GLUT_KEY_RIGHT:
-		printf("right\n");
+		printf("[right]\n");
 		SharedMemory::getInstance().keyRight();
 		break;
+	case GLUT_KEY_UP:
+		printf("[up]\n");
+		SharedMemory::getInstance().keyUp();
+		break;
+	case GLUT_KEY_DOWN:
+		printf("[down]\n");
+		SharedMemory::getInstance().keyDown();
+		break;
+	case GLUT_KEY_F2:
+		printf("[F2 [start]]\n");
+		SharedMemory::getInstance().keyStart();
+		break;
 	case GLUT_KEY_F1:
-		printf("F1 [escape]\n");
+		printf("[F1 [escape]]\n");
 		SharedMemory::getInstance().keyEsc();
 		break;
+	case GLUT_KEY_PAGE_DOWN:
+		yAngle += 1.0f;
+		break;
+	case GLUT_KEY_PAGE_UP:
+		yAngle -= 1.0f;
+		break;
 	}
+}
+
+void OpenGLMain::nextFrame()
+{
+	glutPostRedisplay();
 }

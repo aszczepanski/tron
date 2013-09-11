@@ -16,6 +16,7 @@ public:
 	void registerClient();
 	void endGame();
 	void leaveGame();
+	void startGame();
 	void sendTurn(common::Direction);
 	void getStageInfo();
 	void sendByte(unsigned char c);

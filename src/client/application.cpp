@@ -32,12 +32,12 @@ void* Application::start_routine()
 		OpenGLMain ogl(sharedMemory);
 		ogl.run();
 
-		//while (!sharedMemory.getEnd())
-		for (int i=0; i<100; i++)
+		while (!sharedMemory.getEnd())
+		//for (int i=0; i<200; i++)
 		{
 			usleep(40000u);
-			std::cout << "CLIENT stage info request sent\n";
 			serverSender.getStageInfo();
+			std::cout << "CLIENT stage info request sent\n";
 		}
 
 		serverListener.wait();

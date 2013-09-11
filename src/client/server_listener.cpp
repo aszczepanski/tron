@@ -20,7 +20,6 @@ void* ServerListener::start_routine()
 {
 	common::Logger::getInstance().log("CLIENT UDP listener start");
 
-	// TODO test only
 	REQUEST request;
 	bzero(&request, sizeof(REQUEST));
 	request.request_type = REQUEST::REGISTER_LISTENER;
@@ -47,6 +46,10 @@ void* ServerListener::start_routine()
 		if (request.request_type == REQUEST::END_GAME)
 		{
 			common::Logger::getInstance().debug("CLIENT UDP request end");
+
+			sharedMemory.setEnd();
+			std::cout << "\t\t" << sharedMemory.getEnd() << std::endl;
+
 			break;
 		}
 		else if (request.request_type == REQUEST::LEAVE_GAME)
@@ -62,6 +65,9 @@ void* ServerListener::start_routine()
 			if (token == sharedMemory.getToken())
 			{
 				cout << "genuine token: " << token << endl;
+				sharedMemory.setEnd();
+				std::cout << "\t\t" << sharedMemory.getEnd() << std::endl;
+
 				break;
 			}
 		}
@@ -72,13 +78,17 @@ void* ServerListener::start_routine()
 			for (int i=0; i<request.length; i++)
 			{
 				PLAYER_INFO playerInfo;
+				memset(&playerInfo, 0, sizeof(PLAYER_INFO));
 				client.receive(&playerInfo, sizeof(PLAYER_INFO));
 
 				cout << "playerInfo.player_no: " << playerInfo.player_no << std::endl;
+				cout << playerInfo.x << " " << playerInfo.y << endl;
+
+				sharedMemory.addPosition(playerInfo);
 			}
 			
 		}
-		else if (request.request_type = REQUEST::NEW_TURN)
+		else if (request.request_type == REQUEST::NEW_TURN)
 		{
 			cout << "request.length: " << request.length << endl;
 			for (int i=0; i<request.length; i++)
@@ -89,14 +99,39 @@ void* ServerListener::start_routine()
 			
 				std::cout << "player: " << newTurn.player_no << std::endl;
 				cout << newTurn.move.x << " " << newTurn.move.y << endl;
-				cout.flush();
 				std::cout << "direction: " << newTurn.move.direction << std::endl;
-				cout.flush();
+
+				sharedMemory.addTurn(newTurn);
 			}
+		}
+		else if (request.request_type == REQUEST::NEW_CRASH)
+		{
+			for (int i=0; i<request.length; i++)
+			{
+				CRASH_INFO newCrash;
+				memset(&newCrash, 0, sizeof(CRASH_INFO));
+				client.receive(&newCrash, sizeof(CRASH_INFO));
+			
+				std::cout << "player: " << newCrash.player_no << std::endl;
+				cout << newCrash.move.x << " " << newCrash.move.y << endl;
+				std::cout << "direction: " << newCrash.move.direction << std::endl;
+
+				sharedMemory.addCrash(newCrash);
+			}
+		}
+		else if (request.request_type == REQUEST::START_GAME)
+		{
+			START_INFO startInfo;
+			memset(&startInfo, 0, sizeof(START_INFO));
+			client.receive(&startInfo, sizeof(START_INFO));
+
+			sharedMemory.setPlayerNr(startInfo.player_no);
 		}
 	}
 
 	client.closeSocket();
+
+	std::cout << "CLIENT socket closed\n";
 
 	return NULL;
 }

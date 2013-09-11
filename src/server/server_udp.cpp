@@ -71,11 +71,14 @@ ServerUDP::~ServerUDP()
 
 void ServerUDP::send(void* msg, size_t size) const
 {
+	mutex.lock();
 	if (sendto(sock, msg, size, 0, (struct sockaddr*)&from, fromlen) == -1)
 	{
+		mutex.unlock();
 		perror("sendto error");
 		throw WriteError();
 	}
+	mutex.unlock();
 }
 
 void ServerUDP::receive(void* buf, size_t size) const
