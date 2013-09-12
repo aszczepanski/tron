@@ -7,6 +7,7 @@
 #include <common/player_data.h>
 #include <common/protocol.h>
 #include <common/mutex.h>
+#include <map>
 
 namespace client
 {
@@ -56,7 +57,7 @@ private:
 
 	mutable common::Mutex mutex;
 
-	std::vector< PLAYER_INFO > positions;
+	std::map< int,PLAYER_INFO > positions;
 	std::vector< TURN_INFO > turns;
 	std::vector< CRASH_INFO > crashes;
 

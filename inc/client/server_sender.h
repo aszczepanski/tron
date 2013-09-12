@@ -5,6 +5,7 @@
 #include <string>
 #include <client/shared_memory.h>
 #include <common/move.h>
+#include <common/mutex.h>
 
 namespace client
 {
@@ -21,6 +22,8 @@ public:
 	void getStageInfo();
 	void sendByte(unsigned char c);
 	void closeSocket();
+
+	static common::Mutex mutex;
 private:
 	ClientTCP client;
 	SharedMemory& sharedMemory;

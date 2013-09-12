@@ -8,6 +8,8 @@
 #include <server/server_udp_listener.h>
 #include <server/application.h>
 #include <client/application.h>
+#include <client/open_gl_main.h>
+#include <client/shared_memory.h>
 #include <unistd.h>
 
 using namespace application;
@@ -33,6 +35,10 @@ void Application::run()
 		{
 			client::Application clientApp(false);
 			clientApp.run();
+
+			client::OpenGLMain ogl(client::SharedMemory::getInstance());
+			ogl.start();
+
 			clientApp.wait();
 		}
 		else if (2 == n)
@@ -40,12 +46,19 @@ void Application::run()
 			server::Application serverApp;
 			serverApp.run();
 
+			// required to give time for server to prepare
+			// rly bad method ;p
 			sleep(1);
 
 			client::Application clientApp(true);
 
 			clientApp.run();
-		
+
+			// not sure if this is the best idea but works
+			// (should be in seperate process using unix fork,
+			// shared memory and semaphores mechanism)
+			client::OpenGLMain ogl(client::SharedMemory::getInstance());
+			ogl.start();
 
 			clientApp.wait();
 

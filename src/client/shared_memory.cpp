@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <common/protocol.h>
+#include <map>
 
 using namespace client;
 using namespace std;
@@ -86,8 +87,12 @@ void SharedMemory::keyStart()
 
 void SharedMemory::getPositions(std::vector<PLAYER_INFO>& positions) const
 {
+	positions.clear();
 	mutex.lock();
-	positions = this->positions;
+	for (std::map<int,PLAYER_INFO>::const_iterator it = this->positions.begin(); it != this->positions.end(); it++)
+	{
+		positions.push_back(it->second);
+	}
 	mutex.unlock();
 }
 
@@ -95,7 +100,7 @@ void SharedMemory::addPosition(PLAYER_INFO playerInfo)
 {
 	std::cout << "to add: \t\t" << playerInfo.x << " " << playerInfo.y << std::endl;
 	mutex.lock();
-	positions.push_back(playerInfo);
+	positions[playerInfo.player_no] = playerInfo;
 	mutex.unlock();
 }
 

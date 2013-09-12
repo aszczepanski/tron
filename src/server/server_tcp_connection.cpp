@@ -170,8 +170,6 @@ void* ServerTCPConnection::start_routine()
 			std::cout << "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\n";
 			sharedMemory.setStart();			
 		}
-
-		//sleep(1);
 	}
 
 	server.closeConnection();

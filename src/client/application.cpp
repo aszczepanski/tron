@@ -29,11 +29,10 @@ void* Application::start_routine()
 		sharedMemory.setServerSender(&serverSender);
 		sharedMemory.setHost(host);
 
-		OpenGLMain ogl(sharedMemory);
-		ogl.run();
+//		OpenGLMain ogl(sharedMemory);
+//		ogl.run();
 
 		while (!sharedMemory.getEnd())
-		//for (int i=0; i<200; i++)
 		{
 			usleep(40000u);
 			serverSender.getStageInfo();
@@ -49,5 +48,7 @@ void* Application::start_routine()
 	{
 		common::Logger::getInstance().error("exception in client test");
 	}
+
+	exit(0);
 }
 

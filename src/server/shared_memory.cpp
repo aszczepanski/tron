@@ -72,31 +72,33 @@ void SharedMemory::removePlayer(const string& token)
 
 ServerUDP SharedMemory::getServerUDP(const string& token)
 {
+	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		std::cout << token << " " << it->getToken() << std::endl;
 		if (it->getToken() == token)
 		{
+			playersMutex.unlock();
 			return it->getServerUDP();
 		}
 	}
+	playersMutex.unlock();
 	throw 0; // exceptions !!!
 }
 
 void SharedMemory::sendUDPbroadcast(void* msg, size_t size)
 {
-	broadcastMutex.lock();
+	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		(it->getServerUDP()).send(msg, size);
 	}
-	broadcastMutex.unlock();
+	playersMutex.unlock();
 }
 
 void SharedMemory::addMove(Player player, common::Move move)
 {
-	/* TODO check if possible etc... */
-
+	playersMutex.lock();
 	for (set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		if (*it == player)
@@ -107,13 +109,23 @@ void SharedMemory::addMove(Player player, common::Move move)
 			break;
 		}
 	}
+	playersMutex.unlock();
 
-	moves.push_back(make_pair(player,move));
-	std::cout << "moves.size(): " << moves.size() << std::endl;
+	movesMutex.lock();
+	moves.push_back(make_pair(player.getNr(),move));
+	movesMutex.unlock();
+}
+
+void SharedMemory::getMoves(vector< pair<int,common::Move> >& moves)
+{
+	movesMutex.lock();
+	moves = this->moves;
+	movesMutex.unlock();
 }
 
 void SharedMemory::setPosition(Player player, int x, int y)
 {
+	playersMutex.lock();
 	for (set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		if (*it == player)
@@ -122,65 +134,99 @@ void SharedMemory::setPosition(Player player, int x, int y)
 			break;
 		}
 	}
+	playersMutex.unlock();
 }
 
 void SharedMemory::getPlayers(vector<Player>& _players)
 {
+	playersMutex.lock();
 	_players.clear();
 	for (set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		_players.push_back(*it);
 	}
+	playersMutex.unlock();
 }
 
 Player SharedMemory::getPlayer(const ServerUDP& server) const
 {
+	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		if (it->getServerUDP() == server)
 		{
+			playersMutex.unlock();
 			return *it;
 		}
 	}
+	playersMutex.unlock();
 	throw 1; // exceptions !!!
 }
 
 Player SharedMemory::getPlayer(const std::string& token) const
 {
+	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		if (it->getToken() == token)
 		{
+			playersMutex.unlock();
 			return *it;
 		}
 	}
+	playersMutex.unlock();
 	throw 2; // exceptions !!!
+}
+
+Player SharedMemory::getPlayer(const int nr) const
+{
+	playersMutex.lock();
+	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
+	{
+		if (it->getNr() == nr)
+		{
+			playersMutex.unlock();
+			return *it;
+		}
+	}
+	playersMutex.unlock();
+	throw 3; // exceptions !!!
 }
 
 void SharedMemory::checkIntersections()
 {
 	/* TODO check collisions */
+
+	vector<Player> safePlayers;
+	getPlayers(safePlayers);
+
+	vector< pair<int,common::Move> > safeMoves;
+	getMoves(safeMoves);
+
+	/* processing here */
 }
 
 void SharedMemory::updatePositions()
 {
-	broadcastMutex.lock();
+	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
 		it->updatePosition();
 	}
-	broadcastMutex.unlock();
+	playersMutex.unlock();
 
 	checkIntersections();
 }
 
 bool SharedMemory::getEnd() const
 {
+	// TODO mutex here
 	return end;
 }
 
 void SharedMemory::setEnd()
 {
+	// TODO mutex here
 	end = true;
 }
 
@@ -206,12 +252,12 @@ void SharedMemory::setStart()
 		memset(&request, 0, sizeof(REQUEST));
 		request.request_type = REQUEST::START_GAME;
 		
-		broadcastMutex.lock();
+		playersMutex.lock();
 		for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 		{
 			memset(&startInfo, 0, sizeof(START_INFO));
 			startInfo.player_no = it->getNr();
-/*
+
 			REQUEST turnToSend;
 			memset(&turnToSend, 0, sizeof(REQUEST));
 			turnToSend.request_type = REQUEST::NEW_TURN;
@@ -221,19 +267,19 @@ void SharedMemory::setStart()
 			newTurn.player_no = it->getNr();
 			it->getPosition(newTurn.move.x, newTurn.move.y);
 			it->getDirection(newTurn.move.direction);
-*/
+
 			UDPMutex.lock();
 			it->getServerUDP().send(&request, sizeof(REQUEST));
 			it->getServerUDP().send(&startInfo, sizeof(START_INFO));
-/*			
+			
 			for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 			{
 				(it->getServerUDP()).send(&turnToSend, sizeof(REQUEST));
 				(it->getServerUDP()).send(&newTurn, sizeof(TURN_INFO));
 			}
-*/			
+			
 			UDPMutex.unlock();
 		}
-		broadcastMutex.unlock();
+		playersMutex.unlock();
 	}
 }

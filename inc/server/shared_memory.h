@@ -24,12 +24,15 @@ public:
 
 	void sendUDPbroadcast(void* msg, size_t size);
 
-	void addMove(Player player, common::Move move); 
+	void addMove(Player player, common::Move move);
+	void getMoves(std::vector< std::pair<int,common::Move> >&);
+
 	void setPosition(Player player, int x, int y);
 	void getPlayers(std::vector<Player>& players);
 
 	Player getPlayer(const ServerUDP&) const;
 	Player getPlayer(const std::string& token) const;
+	Player getPlayer(const int nr) const;
 
 	void updatePositions();
 
@@ -44,11 +47,11 @@ private:
 	ServerUDP getServerUDP(const std::string& token);
 	std::set<Player> players;
 	
-	std::vector< std::pair<Player, common::Move> > moves;
+	std::vector< std::pair<int, common::Move> > moves;
 
 	mutable common::Mutex startMutex;
 	mutable common::Mutex playersMutex;
-	mutable common::Mutex broadcastMutex;
+	mutable common::Mutex movesMutex;
 
 	bool end;
 	bool start;

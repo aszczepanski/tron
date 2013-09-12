@@ -7,6 +7,8 @@
 
 using namespace client;
 
+common::Mutex ServerSender::mutex;
+
 ServerSender::ServerSender(const std::string& hostname, const std::string& port, SharedMemory& sharedMemory)
 	: client(hostname, port), sharedMemory(sharedMemory)
 {
@@ -24,7 +26,9 @@ void ServerSender::startGame()
 	request.request_type = REQUEST::START_GAME;
 	request.length = 0; // TODO here token
 
+	mutex.lock();
 	client.send(&request, sizeof(REQUEST));
+	mutex.unlock();
 }
 
 void ServerSender::endGame()
@@ -34,7 +38,9 @@ void ServerSender::endGame()
 	request.request_type = REQUEST::END_GAME;
 	request.length = 0;
 
+	mutex.lock();
 	client.send(&request, sizeof(REQUEST));
+	mutex.unlock();
 }
 
 void ServerSender::leaveGame()
@@ -44,14 +50,15 @@ void ServerSender::leaveGame()
 	request.request_type = REQUEST::LEAVE_GAME;
 	request.length = TOKEN_SIZE;
 
-	client.send(&request, sizeof(REQUEST));
-
 	std::string token = sharedMemory.getToken();
 
+	mutex.lock();
+	client.send(&request, sizeof(REQUEST));
 	for (int i=0; i<TOKEN_SIZE; i++)
 	{
 		client.send(&token[i], 1);
 	}
+	mutex.unlock();
 }
 
 void ServerSender::registerClient()
@@ -61,7 +68,9 @@ void ServerSender::registerClient()
 	bzero(&request, sizeof(REQUEST));
 	request.request_type = REQUEST::REGISTER_TOKEN;
 
+	mutex.lock();
 	client.send(&request, sizeof(REQUEST));
+	mutex.unlock();
 
 	bzero(&request, sizeof(REQUEST));
 	client.receive(&request, sizeof(REQUEST));
@@ -87,18 +96,23 @@ void ServerSender::sendTurn(common::Direction direction)
 	REQUEST request;
 	request.request_type = REQUEST::NEW_TURN;
 
+	mutex.lock();
 	client.send(&request, sizeof(REQUEST));
 	client.send(&direction, sizeof(common::Direction));
+	mutex.unlock();
 }
 
 void ServerSender::sendByte(unsigned char c)
 {
 	REQUEST request;
-	bzero(&request, sizeof(REQUEST));
+	memset(&request, 0, sizeof(REQUEST));
 	request.request_type = REQUEST::NEW_TURN;
 	request.length = 1;
+
+	mutex.lock();
 	client.send(&request, sizeof(REQUEST));
 	client.send(&c, 1);
+	mutex.unlock();
 }
 
 void ServerSender::getStageInfo()
@@ -108,5 +122,7 @@ void ServerSender::getStageInfo()
 	request.request_type = REQUEST::STAGE_INFO;
 	request.length = 0;
 
+	mutex.lock();
 	client.send(&request, sizeof(REQUEST));
+	mutex.unlock();
 }
