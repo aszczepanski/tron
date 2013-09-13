@@ -18,6 +18,8 @@ private:
         static void loadTextures();
         static int passedTime();
         static void Init();
+        static void drawBikes();
+        static void drawTrails();
 
 	SharedMemory& sharedMemory;
 

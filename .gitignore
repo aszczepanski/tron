@@ -15,3 +15,15 @@
 *.exe
 *.out
 *.app
+
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+src/CMakeFiles
+src/appllication/CMakeFiles
+src/client/CMakeFiles
+src/common/CMakeFiles
+src/server/CMakeFiles
