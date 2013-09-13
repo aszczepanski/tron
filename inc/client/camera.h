@@ -15,11 +15,15 @@ class Camera {
   glm::mat4 LookAt();
 
  private:
+
+  void UpdatePosition(int interval);
+
   glm::vec3 position_;
   glm::vec3 direction_;
   glm::vec3 nose_;
+  glm::vec3 targetPosition_;
 
-  int movementSpeed_;
+  int speed_;
   double height_;
   double distance_;
 };
