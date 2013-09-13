@@ -20,6 +20,9 @@ public:
 	ServerUDP getServerUDP() const;
 	std::string getToken() const;
 
+	void clearAlive() const;
+	bool getAlive() const;
+
 	unsigned int getNr() const;
 
 	void getPosition(int& x, int& y) const;
@@ -41,6 +44,8 @@ private:
 	ServerUDP serverUDP;
 
 	unsigned int nr;
+
+	mutable bool alive;
 
 	static unsigned int highestPlayerNr;
 

@@ -9,7 +9,7 @@ using namespace std;
 unsigned int Player::highestPlayerNr = 0;
 
 Player::Player(const std::string& token, const ServerUDP& server, int x, int y, common::Direction direction)
-	: token(token), serverUDP(server), nr(highestPlayerNr), x(x), y(y), direction(direction)
+	: token(token), serverUDP(server), nr(highestPlayerNr), x(x), y(y), direction(direction), alive(true)
 {
 	highestPlayerNr++;
 }
@@ -19,6 +19,7 @@ Player::Player(const Player& player)
 {
 	player.getPosition(x,y);
 	player.getDirection(direction);
+	alive = player.getAlive();
 }
 
 Player& Player::operator=(const Player& player)
@@ -38,6 +39,21 @@ ServerUDP Player::getServerUDP() const
 	mutex.unlock();
 
 	return tmpServerUDP;
+}
+
+void Player::clearAlive() const
+{
+	mutex.lock();
+	alive = false;
+	mutex.unlock();
+}
+
+bool Player::getAlive() const
+{
+	mutex.lock();
+	bool tmpAlive = alive;
+	mutex.unlock();
+	return tmpAlive;
 }
 
 string Player::getToken() const

@@ -4,8 +4,11 @@
 #include <server/player.h>
 #include <set>
 #include <iostream>
+#include <map>
+#include <vector>
 #include <common/protocol.h>
 #include <cstring>
+#include <server/geo.h>
 
 using namespace server;
 using namespace std;
@@ -70,6 +73,40 @@ void SharedMemory::removePlayer(const string& token)
 	std::cout << players.size() << std::endl;
 }
 
+void SharedMemory::setDead(const int nr) const
+{
+	CRASH_INFO crash;
+	crash.player_no = nr;
+
+	playersMutex.lock();
+	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
+	{
+		if (it->getNr() == nr)
+		{
+			it->clearAlive();
+			it->getPosition(crash.move.x, crash.move.y);
+			it->getDirection(crash.move.direction);
+		}
+		
+	}
+	playersMutex.unlock();
+
+
+	REQUEST request;
+	request.request_type = REQUEST::NEW_CRASH;
+	request.length = 1;
+
+
+	UDPMutex.lock();
+	for (std::set<Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
+	{
+		(it2->getServerUDP()).send(&request, sizeof(REQUEST));
+		(it2->getServerUDP()).send(&crash, sizeof(CRASH_INFO));
+	}
+	UDPMutex.unlock();
+
+}
+
 ServerUDP SharedMemory::getServerUDP(const string& token)
 {
 	playersMutex.lock();
@@ -112,11 +149,11 @@ void SharedMemory::addMove(Player player, common::Move move)
 	playersMutex.unlock();
 
 	movesMutex.lock();
-	moves.push_back(make_pair(player.getNr(),move));
+	moves[player.getNr()].push_back(move);
 	movesMutex.unlock();
 }
 
-void SharedMemory::getMoves(vector< pair<int,common::Move> >& moves)
+void SharedMemory::getMoves(std::map<int, std::vector<common::Move> >& moves)
 {
 	movesMutex.lock();
 	moves = this->moves;
@@ -197,21 +234,70 @@ void SharedMemory::checkIntersections()
 {
 	/* TODO check collisions */
 
-	vector<Player> safePlayers;
-	getPlayers(safePlayers);
-
-	vector< pair<int,common::Move> > safeMoves;
+	map<int, vector<common::Move> > safeMoves;
 	getMoves(safeMoves);
 
+	vector<Player> safePlayers;
+	getPlayers(safePlayers);
+	for (vector<Player>::iterator it = safePlayers.begin(); it != safePlayers.end(); it++)
+	{
+		common::Move lastMove;
+		it->getPosition(lastMove.x, lastMove.y);
+		it->getDirection(lastMove.direction);
+		safeMoves[it->getNr()].push_back(lastMove);
+	}
+
 	/* processing here */
+
+	for (map<int,vector<common::Move> >::iterator i = safeMoves.begin(); i != safeMoves.end(); i++)
+	{
+		if (i->second.size() < 2)
+		{
+			continue; // TODO degenerates to point
+		}
+		if (!getPlayer(i->first).getAlive())
+		{
+			continue;
+		}
+		pkt p1 = { i->second[i->second.size()-2].x, i->second[i->second.size()-2].y };
+		pkt p2 = { i->second[i->second.size()-1].x, i->second[i->second.size()-1].y };
+		for (map<int,vector<common::Move> >::iterator j = safeMoves.begin(); j != safeMoves.end(); j++)
+		{
+			for (int k=0; k<(int)j->second.size()-1; k++)
+			{
+				
+				pkt p3 = { j->second[k].x, j->second[k].y };
+				pkt p4 = { j->second[k+1].x, j->second[k+1].y };
+				cout << p1.x << " " << p1.y << "\t" << p2.x << " " << p2.y << endl;
+				cout << p3.x << " " << p3.y << "\t" << p4.x << " " << p4.y << endl;
+
+				pair<int,pktd> w = przec(p1,p2,p3,p4);
+				if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
+					&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+				{
+					cout << "\n\niiiiiiiiiiiiiiinnnnnnnnnnnnnnnntttttttttttttteeeeeeeeeeeeeeerrrrrrrrrrssssssssssseeeeeeeeeeeeccccccccccccttttttttt\n\n";
+					cout << i->first << " " << j->first << endl<<endl;
+					cout << (int)w.second.x << " " << (int)w.second.y << endl<<endl;
+
+					if (getPlayer(i->first).getAlive())
+					{
+						setDead(i->first);
+					}
+				}
+			}
+		}
+	}
 }
 
 void SharedMemory::updatePositions()
 {
 	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
-	{
-		it->updatePosition();
+	{	
+		if (it->getAlive())
+		{
+			it->updatePosition();
+		}
 	}
 	playersMutex.unlock();
 
@@ -272,14 +358,29 @@ void SharedMemory::setStart()
 			it->getServerUDP().send(&request, sizeof(REQUEST));
 			it->getServerUDP().send(&startInfo, sizeof(START_INFO));
 			
-			for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
+			for (std::set<Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
 			{
-				(it->getServerUDP()).send(&turnToSend, sizeof(REQUEST));
-				(it->getServerUDP()).send(&newTurn, sizeof(TURN_INFO));
+				(it2->getServerUDP()).send(&turnToSend, sizeof(REQUEST));
+				(it2->getServerUDP()).send(&newTurn, sizeof(TURN_INFO));
 			}
 			
 			UDPMutex.unlock();
+
+			for (set<Player>::iterator it3 = players.begin(); it3 != players.end(); it3++)
+			{
+				if (*it3 == *it)
+				{
+					std::cout << "found\n";
+					break;
+				}
+			}
+
+			movesMutex.lock();
+			moves[it->getNr()].push_back(newTurn.move);
+			movesMutex.unlock();
+
 		}
 		playersMutex.unlock();
+
 	}
 }

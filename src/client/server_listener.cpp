@@ -112,7 +112,7 @@ void* ServerListener::start_routine()
 				memset(&newCrash, 0, sizeof(CRASH_INFO));
 				client.receive(&newCrash, sizeof(CRASH_INFO));
 			
-				std::cout << "player: " << newCrash.player_no << std::endl;
+				std::cout << "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbplayer: " << newCrash.player_no << std::endl;
 				cout << newCrash.move.x << " " << newCrash.move.y << endl;
 				std::cout << "direction: " << newCrash.move.direction << std::endl;
 
