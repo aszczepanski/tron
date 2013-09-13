@@ -38,7 +38,7 @@ void* server::Application::start_routine()
 		{
 			sharedMemory.updatePositions();
 
-			usleep(200000u);
+			usleep(80000u);
 		}
 
 		cl.wait();
