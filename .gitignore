@@ -27,3 +27,10 @@ src/appllication/CMakeFiles
 src/client/CMakeFiles
 src/common/CMakeFiles
 src/server/CMakeFiles
+src/server/Makefile
+src/server/cmake_install.cmake
+src/client/Makefile
+src/client/cmake_install.cmake
+src/application/Makefile
+src/application/cmake_install.cmake
+src/Makefile

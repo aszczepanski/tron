@@ -1,2 +1,0 @@
-/usr/bin/ar cr ../../lib/libserver.a  CMakeFiles/server.dir/application.cpp.o CMakeFiles/server.dir/player.cpp.o CMakeFiles/server.dir/server_tcp.cpp.o CMakeFiles/server.dir/server_tcp_connection.cpp.o CMakeFiles/server.dir/server_tcp_listener.cpp.o CMakeFiles/server.dir/server_udp.cpp.o CMakeFiles/server.dir/server_udp_listener.cpp.o CMakeFiles/server.dir/shared_memory.cpp.o
-/usr/bin/ranlib ../../lib/libserver.a
