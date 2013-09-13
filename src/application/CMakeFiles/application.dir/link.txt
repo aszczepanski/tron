@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libapplication.a  CMakeFiles/application.dir/application.cpp.o
+/usr/bin/ranlib ../../lib/libapplication.a

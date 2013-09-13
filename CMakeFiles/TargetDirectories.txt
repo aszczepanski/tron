@@ -1,0 +1,4 @@
+/home/kareth/shared/src/application/CMakeFiles/application.dir
+/home/kareth/shared/src/client/CMakeFiles/client.dir
+/home/kareth/shared/src/CMakeFiles/main.dir
+/home/kareth/shared/src/server/CMakeFiles/server.dir

@@ -55,11 +55,13 @@ void SharedMemory::keyRight()
 	serverSender->sendTurn(common::EAST);
 }
 
+// TODO obsolete
 void SharedMemory::keyUp()
 {
 	serverSender->sendTurn(common::NORTH);
 }
 
+// TODO obsolete
 void SharedMemory::keyDown()
 {
 	serverSender->sendTurn(common::SOUTH);

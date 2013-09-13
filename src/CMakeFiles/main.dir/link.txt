@@ -1,0 +1,1 @@
+/usr/bin/c++   -g -Wall    CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/common/ithread.cpp.o CMakeFiles/main.dir/common/logger.cpp.o CMakeFiles/main.dir/common/mutex.cpp.o  -o ../main -rdynamic -L/home/kareth/shared/lib ../lib/libapplication.a ../lib/libserver.a ../lib/libclient.a -lpthread -lGL -lglut -lGLEW -Wl,-rpath,/home/kareth/shared/lib 
