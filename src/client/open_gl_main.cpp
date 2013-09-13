@@ -18,6 +18,8 @@
 #include <vector>
 #include <iostream>
 
+#include <client/lodepng.h>
+
 using namespace client;
 using glm::mat4;
 using glm::vec3;
@@ -29,6 +31,8 @@ int OpenGLMain::lastTime_;
 
 GLuint tex;
 TGAImg img;
+
+std::vector<unsigned char> image;
 
 Camera* camera;
 Lighting* lighting;
@@ -81,6 +85,9 @@ void OpenGLMain::drawBikes() {
 }
 
 void OpenGLMain::drawTrails() {
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
   for (std::vector<TURN_INFO>::iterator it = turns.begin(); it != turns.end(); it++) {
     // TODO color
     vec3 begin = vec3(it->move.x, it->move.y, 0);
@@ -98,6 +105,8 @@ void OpenGLMain::drawTrails() {
     Box* box = new Box(size);
     box->draw(M, tex);
   }
+
+   glDisable(GL_BLEND);
 }
 
 void OpenGLMain::nextFrame()
@@ -121,7 +130,22 @@ int OpenGLMain::passedTime() {
 
 
 void OpenGLMain::loadTextures(){
-  if (img.Load("src/client/bricks.tga")==IMG_OK) {
+  unsigned width, height;
+  unsigned error = lodepng::decode(image, width, height, "src/client/texture.png");
+
+  if (error != 0) {
+    std::cout << "error " << error << ": " << lodepng_error_text(error) << std::endl;
+    return;
+  }
+
+  glEnable(GL_TEXTURE_2D);
+
+  glGenTextures(1, &tex); //Zainicjuj uchwyt tex
+  glBindTexture(GL_TEXTURE_2D,tex); //Przetwarzaj uchwyt tex
+
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+
+  /*if (img.Load("src/client/bricks.tga")==IMG_OK) {
     glGenTextures(1,&tex); //Zainicjuj uchwyt tex
     glBindTexture(GL_TEXTURE_2D,tex); //Przetwarzaj uchwyt tex
     if (img.GetBPP()==24) //Obrazek 24bit
@@ -138,7 +162,7 @@ void OpenGLMain::loadTextures(){
   else {
     // błąd
     std::cout << "error\n";
-  }
+  }*/
 }
 
 void OpenGLMain::Init(){

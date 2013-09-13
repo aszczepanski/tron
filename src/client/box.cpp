@@ -109,16 +109,6 @@ void Box::draw(mat4 M, GLuint texture){
 
   glLoadMatrixf(glm::value_ptr(World::getV() * M));
 
-  glEnable(GL_NORMALIZE);
-
-  float amb[] = {0.3, 0.3, 0.3, 0.1},
-        dif[] = {0.5, 0.5, 0.5, 0.1},
-        spe[] = {0.5, 0.5, 0.5, 1.0},
-        shi  = 50.0;
-  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb );
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif );
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spe );
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shi );
 
   glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -127,16 +117,13 @@ void Box::draw(mat4 M, GLuint texture){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
     glDisable(GL_COLOR_MATERIAL);
     glEnable(GL_TEXTURE_2D);
-    /*float amb[] = {0.9, 0.9, 0.9, 1.0},
-          dif[] = {0.5, 0.5, 0.5, 0.2},
-          spe[] = {0.5, 0.5, 0.5, 1.0},
-          shi  = 50.0;
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb );
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif );
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spe );
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shi );*/
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
   }
   else{
     glDisable(GL_TEXTURE_2D);
@@ -145,7 +132,7 @@ void Box::draw(mat4 M, GLuint texture){
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-  //glEnableClientState(GL_COLOR_ARRAY);
+  glEnableClientState(GL_COLOR_ARRAY);
   glEnableClientState( GL_NORMAL_ARRAY );
 
   glVertexPointer(3,GL_FLOAT,0,boxVertices);
@@ -157,11 +144,16 @@ void Box::draw(mat4 M, GLuint texture){
   glDisableClientState( GL_NORMAL_ARRAY );
   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
-  //glDisableClientState(GL_COLOR_ARRAY);
+  glDisableClientState(GL_COLOR_ARRAY);
 
   for(int i = 0; i < 24 * 3; i++)
     if( boxVertices[i] != 0) boxVertices[i] /= boxVertices[i];
-  glBindTexture(GL_TEXTURE_2D, NULL);
-}
+
+  //glBindTexture(GL_TEXTURE_2D, NULL);
+
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_BLEND);
+
+  }
 
 }  // namespace client
