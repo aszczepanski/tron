@@ -7,6 +7,8 @@
 
 #define TOKEN_SIZE 20
 
+#define FIELD_SIZE 40
+
 struct REQUEST
 {
 	enum

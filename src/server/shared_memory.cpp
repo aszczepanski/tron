@@ -268,16 +268,16 @@ void SharedMemory::checkIntersections()
 				
 				pkt p3 = { j->second[k].x, j->second[k].y };
 				pkt p4 = { j->second[k+1].x, j->second[k+1].y };
-				cout << p1.x << " " << p1.y << "\t" << p2.x << " " << p2.y << endl;
-				cout << p3.x << " " << p3.y << "\t" << p4.x << " " << p4.y << endl;
+				//cout << p1.x << " " << p1.y << "\t" << p2.x << " " << p2.y << endl;
+				//cout << p3.x << " " << p3.y << "\t" << p4.x << " " << p4.y << endl;
 
 				pair<int,pktd> w = przec(p1,p2,p3,p4);
 				if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
 					&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
 				{
-					cout << "\n\niiiiiiiiiiiiiiinnnnnnnnnnnnnnnntttttttttttttteeeeeeeeeeeeeeerrrrrrrrrrssssssssssseeeeeeeeeeeeccccccccccccttttttttt\n\n";
-					cout << i->first << " " << j->first << endl<<endl;
-					cout << (int)w.second.x << " " << (int)w.second.y << endl<<endl;
+					//cout << "\n\niiiiiiiiiiiiiiinnnnnnnnnnnnnnnntttttttttttttteeeeeeeeeeeeeeerrrrrrrrrrssssssssssseeeeeeeeeeeeccccccccccccttttttttt\n\n";
+					//cout << i->first << " " << j->first << endl<<endl;
+					//cout << (int)w.second.x << " " << (int)w.second.y << endl<<endl;
 
 					if (getPlayer(i->first).getAlive())
 					{
@@ -286,6 +286,60 @@ void SharedMemory::checkIntersections()
 				}
 			}
 		}
+
+		{
+			pkt p3 = { -FIELD_SIZE/2, -FIELD_SIZE/2 };
+			pkt p4 = { -FIELD_SIZE/2, FIELD_SIZE/2 };
+			pair<int,pktd> w = przec(p1,p2,p3,p4);
+			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
+				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			{
+				if (getPlayer(i->first).getAlive())
+				{
+					setDead(i->first);
+				}
+			}
+		}
+		{
+			pkt p3 = { -FIELD_SIZE/2, FIELD_SIZE/2 };
+			pkt p4 = { FIELD_SIZE/2, FIELD_SIZE/2 };
+			pair<int,pktd> w = przec(p1,p2,p3,p4);
+			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
+				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			{
+				if (getPlayer(i->first).getAlive())
+				{
+					setDead(i->first);
+				}
+			}
+		}
+		{
+			pkt p3 = { FIELD_SIZE/2, FIELD_SIZE/2 };
+			pkt p4 = { FIELD_SIZE/2, -FIELD_SIZE/2 };
+			pair<int,pktd> w = przec(p1,p2,p3,p4);
+			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
+				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			{
+				if (getPlayer(i->first).getAlive())
+				{
+					setDead(i->first);
+				}
+			}
+		}
+		{
+			pkt p3 = { FIELD_SIZE/2, -FIELD_SIZE/2 };
+			pkt p4 = { -FIELD_SIZE/2, -FIELD_SIZE/2 };
+			pair<int,pktd> w = przec(p1,p2,p3,p4);
+			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
+				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			{
+				if (getPlayer(i->first).getAlive())
+				{
+					setDead(i->first);
+				}
+			}
+		}
+
 	}
 }
 
