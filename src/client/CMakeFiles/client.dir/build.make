@@ -69,9 +69,32 @@ src/client/CMakeFiles/client.dir/application.cpp.o.provides: src/client/CMakeFil
 
 src/client/CMakeFiles/client.dir/application.cpp.o.provides.build: src/client/CMakeFiles/client.dir/application.cpp.o
 
+src/client/CMakeFiles/client.dir/axis.cpp.o: src/client/CMakeFiles/client.dir/flags.make
+src/client/CMakeFiles/client.dir/axis.cpp.o: src/client/axis.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/axis.cpp.o"
+	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/axis.cpp.o -c /home/kareth/shared/src/client/axis.cpp
+
+src/client/CMakeFiles/client.dir/axis.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/client.dir/axis.cpp.i"
+	cd /home/kareth/shared/src/client && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/kareth/shared/src/client/axis.cpp > CMakeFiles/client.dir/axis.cpp.i
+
+src/client/CMakeFiles/client.dir/axis.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/client.dir/axis.cpp.s"
+	cd /home/kareth/shared/src/client && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/kareth/shared/src/client/axis.cpp -o CMakeFiles/client.dir/axis.cpp.s
+
+src/client/CMakeFiles/client.dir/axis.cpp.o.requires:
+.PHONY : src/client/CMakeFiles/client.dir/axis.cpp.o.requires
+
+src/client/CMakeFiles/client.dir/axis.cpp.o.provides: src/client/CMakeFiles/client.dir/axis.cpp.o.requires
+	$(MAKE) -f src/client/CMakeFiles/client.dir/build.make src/client/CMakeFiles/client.dir/axis.cpp.o.provides.build
+.PHONY : src/client/CMakeFiles/client.dir/axis.cpp.o.provides
+
+src/client/CMakeFiles/client.dir/axis.cpp.o.provides.build: src/client/CMakeFiles/client.dir/axis.cpp.o
+
 src/client/CMakeFiles/client.dir/box.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/box.cpp.o: src/client/box.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/box.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/box.cpp.o -c /home/kareth/shared/src/client/box.cpp
 
@@ -94,7 +117,7 @@ src/client/CMakeFiles/client.dir/box.cpp.o.provides.build: src/client/CMakeFiles
 
 src/client/CMakeFiles/client.dir/camera.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/camera.cpp.o: src/client/camera.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/camera.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/camera.cpp.o -c /home/kareth/shared/src/client/camera.cpp
 
@@ -117,7 +140,7 @@ src/client/CMakeFiles/client.dir/camera.cpp.o.provides.build: src/client/CMakeFi
 
 src/client/CMakeFiles/client.dir/client_tcp.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/client_tcp.cpp.o: src/client/client_tcp.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_5)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/client_tcp.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/client_tcp.cpp.o -c /home/kareth/shared/src/client/client_tcp.cpp
 
@@ -140,7 +163,7 @@ src/client/CMakeFiles/client.dir/client_tcp.cpp.o.provides.build: src/client/CMa
 
 src/client/CMakeFiles/client.dir/client_udp.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/client_udp.cpp.o: src/client/client_udp.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/client_udp.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/client_udp.cpp.o -c /home/kareth/shared/src/client/client_udp.cpp
 
@@ -163,7 +186,7 @@ src/client/CMakeFiles/client.dir/client_udp.cpp.o.provides.build: src/client/CMa
 
 src/client/CMakeFiles/client.dir/detailed_cube.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/detailed_cube.cpp.o: src/client/detailed_cube.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/detailed_cube.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/detailed_cube.cpp.o -c /home/kareth/shared/src/client/detailed_cube.cpp
 
@@ -186,7 +209,7 @@ src/client/CMakeFiles/client.dir/detailed_cube.cpp.o.provides.build: src/client/
 
 src/client/CMakeFiles/client.dir/lighting.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/lighting.cpp.o: src/client/lighting.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/lighting.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/lighting.cpp.o -c /home/kareth/shared/src/client/lighting.cpp
 
@@ -209,7 +232,7 @@ src/client/CMakeFiles/client.dir/lighting.cpp.o.provides.build: src/client/CMake
 
 src/client/CMakeFiles/client.dir/open_gl_main.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/open_gl_main.cpp.o: src/client/open_gl_main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/open_gl_main.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/open_gl_main.cpp.o -c /home/kareth/shared/src/client/open_gl_main.cpp
 
@@ -232,7 +255,7 @@ src/client/CMakeFiles/client.dir/open_gl_main.cpp.o.provides.build: src/client/C
 
 src/client/CMakeFiles/client.dir/server_listener.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/server_listener.cpp.o: src/client/server_listener.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/server_listener.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/server_listener.cpp.o -c /home/kareth/shared/src/client/server_listener.cpp
 
@@ -255,7 +278,7 @@ src/client/CMakeFiles/client.dir/server_listener.cpp.o.provides.build: src/clien
 
 src/client/CMakeFiles/client.dir/server_sender.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/server_sender.cpp.o: src/client/server_sender.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_11)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/server_sender.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/server_sender.cpp.o -c /home/kareth/shared/src/client/server_sender.cpp
 
@@ -278,7 +301,7 @@ src/client/CMakeFiles/client.dir/server_sender.cpp.o.provides.build: src/client/
 
 src/client/CMakeFiles/client.dir/shared_memory.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/shared_memory.cpp.o: src/client/shared_memory.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_11)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_12)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/shared_memory.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/shared_memory.cpp.o -c /home/kareth/shared/src/client/shared_memory.cpp
 
@@ -301,7 +324,7 @@ src/client/CMakeFiles/client.dir/shared_memory.cpp.o.provides.build: src/client/
 
 src/client/CMakeFiles/client.dir/tga.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/tga.cpp.o: src/client/tga.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_12)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_13)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/tga.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/tga.cpp.o -c /home/kareth/shared/src/client/tga.cpp
 
@@ -324,7 +347,7 @@ src/client/CMakeFiles/client.dir/tga.cpp.o.provides.build: src/client/CMakeFiles
 
 src/client/CMakeFiles/client.dir/world.cpp.o: src/client/CMakeFiles/client.dir/flags.make
 src/client/CMakeFiles/client.dir/world.cpp.o: src/client/world.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_13)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kareth/shared/CMakeFiles $(CMAKE_PROGRESS_14)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/client/CMakeFiles/client.dir/world.cpp.o"
 	cd /home/kareth/shared/src/client && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/client.dir/world.cpp.o -c /home/kareth/shared/src/client/world.cpp
 
@@ -348,6 +371,7 @@ src/client/CMakeFiles/client.dir/world.cpp.o.provides.build: src/client/CMakeFil
 # Object files for target client
 client_OBJECTS = \
 "CMakeFiles/client.dir/application.cpp.o" \
+"CMakeFiles/client.dir/axis.cpp.o" \
 "CMakeFiles/client.dir/box.cpp.o" \
 "CMakeFiles/client.dir/camera.cpp.o" \
 "CMakeFiles/client.dir/client_tcp.cpp.o" \
@@ -365,6 +389,7 @@ client_OBJECTS = \
 client_EXTERNAL_OBJECTS =
 
 lib/libclient.a: src/client/CMakeFiles/client.dir/application.cpp.o
+lib/libclient.a: src/client/CMakeFiles/client.dir/axis.cpp.o
 lib/libclient.a: src/client/CMakeFiles/client.dir/box.cpp.o
 lib/libclient.a: src/client/CMakeFiles/client.dir/camera.cpp.o
 lib/libclient.a: src/client/CMakeFiles/client.dir/client_tcp.cpp.o
@@ -388,6 +413,7 @@ src/client/CMakeFiles/client.dir/build: lib/libclient.a
 .PHONY : src/client/CMakeFiles/client.dir/build
 
 src/client/CMakeFiles/client.dir/requires: src/client/CMakeFiles/client.dir/application.cpp.o.requires
+src/client/CMakeFiles/client.dir/requires: src/client/CMakeFiles/client.dir/axis.cpp.o.requires
 src/client/CMakeFiles/client.dir/requires: src/client/CMakeFiles/client.dir/box.cpp.o.requires
 src/client/CMakeFiles/client.dir/requires: src/client/CMakeFiles/client.dir/camera.cpp.o.requires
 src/client/CMakeFiles/client.dir/requires: src/client/CMakeFiles/client.dir/client_tcp.cpp.o.requires

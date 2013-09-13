@@ -1,5 +1,6 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/client.dir/application.cpp.o"
+  "CMakeFiles/client.dir/axis.cpp.o"
   "CMakeFiles/client.dir/box.cpp.o"
   "CMakeFiles/client.dir/camera.cpp.o"
   "CMakeFiles/client.dir/client_tcp.cpp.o"

@@ -4,6 +4,7 @@
 #include <client/camera.h>
 #include <client/world.h>
 #include <client/box.h>
+#include <client/axis.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <string>
@@ -80,7 +81,7 @@ void OpenGLMain::start(){
 }
 
 void OpenGLMain::displayFrame() {
-  glClearColor(0,0,0,1);
+  glClearColor(0.05,0.05, 0.05,1);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glm::mat4 V = camera->LookAt();
@@ -92,6 +93,9 @@ void OpenGLMain::displayFrame() {
   glLoadMatrixf(glm::value_ptr(P));
 
   glMatrixMode(GL_MODELVIEW);
+
+  int worldSize = 100;
+  Axis::draw(worldSize/2);
 
   // Draw bikes
   for (int i = 0; i < positions.size(); i++) {
@@ -152,14 +156,6 @@ void OpenGLMain::keyDown(int c, int x, int y)
     case GLUT_KEY_RIGHT:
       printf("[right]\n");
       SharedMemory::getInstance().keyRight();
-      break;
-    case GLUT_KEY_UP:
-      printf("[up]\n");
-      SharedMemory::getInstance().keyUp();
-      break;
-    case GLUT_KEY_DOWN:
-      printf("[down]\n");
-      SharedMemory::getInstance().keyDown();
       break;
     case GLUT_KEY_F2:
       printf("[F2 [start]]\n");

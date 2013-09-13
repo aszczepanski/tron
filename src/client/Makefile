@@ -133,6 +133,30 @@ application.cpp.s:
 	cd /home/kareth/shared && $(MAKE) -f src/client/CMakeFiles/client.dir/build.make src/client/CMakeFiles/client.dir/application.cpp.s
 .PHONY : application.cpp.s
 
+axis.o: axis.cpp.o
+.PHONY : axis.o
+
+# target to build an object file
+axis.cpp.o:
+	cd /home/kareth/shared && $(MAKE) -f src/client/CMakeFiles/client.dir/build.make src/client/CMakeFiles/client.dir/axis.cpp.o
+.PHONY : axis.cpp.o
+
+axis.i: axis.cpp.i
+.PHONY : axis.i
+
+# target to preprocess a source file
+axis.cpp.i:
+	cd /home/kareth/shared && $(MAKE) -f src/client/CMakeFiles/client.dir/build.make src/client/CMakeFiles/client.dir/axis.cpp.i
+.PHONY : axis.cpp.i
+
+axis.s: axis.cpp.s
+.PHONY : axis.s
+
+# target to generate assembly for a file
+axis.cpp.s:
+	cd /home/kareth/shared && $(MAKE) -f src/client/CMakeFiles/client.dir/build.make src/client/CMakeFiles/client.dir/axis.cpp.s
+.PHONY : axis.cpp.s
+
 box.o: box.cpp.o
 .PHONY : box.o
 
@@ -433,6 +457,9 @@ help:
 	@echo "... application.o"
 	@echo "... application.i"
 	@echo "... application.s"
+	@echo "... axis.o"
+	@echo "... axis.i"
+	@echo "... axis.s"
 	@echo "... box.o"
 	@echo "... box.i"
 	@echo "... box.s"

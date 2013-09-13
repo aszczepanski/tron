@@ -5,6 +5,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/kareth/shared/src/client/application.cpp" "/home/kareth/shared/src/client/CMakeFiles/client.dir/application.cpp.o"
+  "/home/kareth/shared/src/client/axis.cpp" "/home/kareth/shared/src/client/CMakeFiles/client.dir/axis.cpp.o"
   "/home/kareth/shared/src/client/box.cpp" "/home/kareth/shared/src/client/CMakeFiles/client.dir/box.cpp.o"
   "/home/kareth/shared/src/client/camera.cpp" "/home/kareth/shared/src/client/CMakeFiles/client.dir/camera.cpp.o"
   "/home/kareth/shared/src/client/client_tcp.cpp" "/home/kareth/shared/src/client/CMakeFiles/client.dir/client_tcp.cpp.o"

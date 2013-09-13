@@ -17,6 +17,81 @@ src/client/CMakeFiles/client.dir/application.cpp.o
  inc/common/mutex.h
  inc/common/player_data.h
  inc/common/protocol.h
+src/client/CMakeFiles/client.dir/axis.cpp.o
+ /home/kareth/shared/src/client/axis.cpp
+ inc/client/../../src/client/glm/./core/_detail.hpp
+ inc/client/../../src/client/glm/./core/_fixes.hpp
+ inc/client/../../src/client/glm/./core/_swizzle.hpp
+ inc/client/../../src/client/glm/./core/func_common.hpp
+ inc/client/../../src/client/glm/./core/func_common.inl
+ inc/client/../../src/client/glm/./core/func_exponential.hpp
+ inc/client/../../src/client/glm/./core/func_exponential.inl
+ inc/client/../../src/client/glm/./core/func_geometric.hpp
+ inc/client/../../src/client/glm/./core/func_geometric.inl
+ inc/client/../../src/client/glm/./core/func_integer.hpp
+ inc/client/../../src/client/glm/./core/func_integer.inl
+ inc/client/../../src/client/glm/./core/func_matrix.hpp
+ inc/client/../../src/client/glm/./core/func_matrix.inl
+ inc/client/../../src/client/glm/./core/func_noise.hpp
+ inc/client/../../src/client/glm/./core/func_noise.inl
+ inc/client/../../src/client/glm/./core/func_packing.hpp
+ inc/client/../../src/client/glm/./core/func_packing.inl
+ inc/client/../../src/client/glm/./core/func_trigonometric.hpp
+ inc/client/../../src/client/glm/./core/func_trigonometric.inl
+ inc/client/../../src/client/glm/./core/func_vector_relational.hpp
+ inc/client/../../src/client/glm/./core/func_vector_relational.inl
+ inc/client/../../src/client/glm/./core/setup.hpp
+ inc/client/../../src/client/glm/./core/type.hpp
+ inc/client/../../src/client/glm/./core/type_float.hpp
+ inc/client/../../src/client/glm/./core/type_gentype.hpp
+ inc/client/../../src/client/glm/./core/type_half.hpp
+ inc/client/../../src/client/glm/./core/type_half.inl
+ inc/client/../../src/client/glm/./core/type_int.hpp
+ inc/client/../../src/client/glm/./core/type_mat.hpp
+ inc/client/../../src/client/glm/./core/type_mat2x2.hpp
+ inc/client/../../src/client/glm/./core/type_mat2x2.inl
+ inc/client/../../src/client/glm/./core/type_mat2x3.hpp
+ inc/client/../../src/client/glm/./core/type_mat2x3.inl
+ inc/client/../../src/client/glm/./core/type_mat2x4.hpp
+ inc/client/../../src/client/glm/./core/type_mat2x4.inl
+ inc/client/../../src/client/glm/./core/type_mat3x2.hpp
+ inc/client/../../src/client/glm/./core/type_mat3x2.inl
+ inc/client/../../src/client/glm/./core/type_mat3x3.hpp
+ inc/client/../../src/client/glm/./core/type_mat3x3.inl
+ inc/client/../../src/client/glm/./core/type_mat3x4.hpp
+ inc/client/../../src/client/glm/./core/type_mat3x4.inl
+ inc/client/../../src/client/glm/./core/type_mat4x2.hpp
+ inc/client/../../src/client/glm/./core/type_mat4x2.inl
+ inc/client/../../src/client/glm/./core/type_mat4x3.hpp
+ inc/client/../../src/client/glm/./core/type_mat4x3.inl
+ inc/client/../../src/client/glm/./core/type_mat4x4.hpp
+ inc/client/../../src/client/glm/./core/type_mat4x4.inl
+ inc/client/../../src/client/glm/./core/type_size.hpp
+ inc/client/../../src/client/glm/./core/type_vec.hpp
+ inc/client/../../src/client/glm/./core/type_vec1.hpp
+ inc/client/../../src/client/glm/./core/type_vec1.inl
+ inc/client/../../src/client/glm/./core/type_vec2.hpp
+ inc/client/../../src/client/glm/./core/type_vec2.inl
+ inc/client/../../src/client/glm/./core/type_vec3.hpp
+ inc/client/../../src/client/glm/./core/type_vec3.inl
+ inc/client/../../src/client/glm/./core/type_vec4.hpp
+ inc/client/../../src/client/glm/./core/type_vec4.inl
+ inc/client/../../src/client/glm/core/_fixes.hpp
+ inc/client/../../src/client/glm/core/setup.hpp
+ inc/client/../../src/client/glm/glm.hpp
+ inc/client/../../src/client/glm/gtc/../glm.hpp
+ inc/client/../../src/client/glm/gtc/matrix_transform.hpp
+ inc/client/../../src/client/glm/gtc/matrix_transform.inl
+ inc/client/../../src/client/glm/gtc/type_ptr.hpp
+ inc/client/../../src/client/glm/gtc/type_ptr.inl
+ inc/client/../../src/client/glm/gtx/../gtx/../gtc/matrix_transform.hpp
+ inc/client/../../src/client/glm/gtx/../gtx/transform.hpp
+ inc/client/../../src/client/glm/gtx/../gtx/transform.inl
+ inc/client/../../src/client/glm/gtx/rotate_vector.hpp
+ inc/client/../../src/client/glm/gtx/rotate_vector.inl
+ inc/client/axis.h
+ inc/client/opengl_headers.h
+ inc/client/world.h
 src/client/CMakeFiles/client.dir/box.cpp.o
  /home/kareth/shared/src/client/box.cpp
  inc/client/../../src/client/glm/./core/_detail.hpp
@@ -335,6 +410,7 @@ src/client/CMakeFiles/client.dir/open_gl_main.cpp.o
  inc/client/../../src/client/glm/gtx/../gtx/transform.inl
  inc/client/../../src/client/glm/gtx/rotate_vector.hpp
  inc/client/../../src/client/glm/gtx/rotate_vector.inl
+ inc/client/axis.h
  inc/client/box.h
  inc/client/camera.h
  inc/client/lighting.h
