@@ -9,17 +9,25 @@ namespace client
 class OpenGLMain
 {
 public:
-	OpenGLMain(SharedMemory&);	
+	OpenGLMain(SharedMemory&);
 	void start();
 private:
 	static void keyDown(int c, int x, int y);
 	static void displayFrame();
 	static void nextFrame();
+        static void loadTextures();
+        static int passedTime();
+        static void Init();
+        static void drawBikes();
+        static void drawTrails();
+
 	SharedMemory& sharedMemory;
 
 	static std::vector<PLAYER_INFO> positions;
 	static std::vector<TURN_INFO> turns;
 	static std::vector<CRASH_INFO> crashes;
+
+        static int lastTime_;
 };
 
 }

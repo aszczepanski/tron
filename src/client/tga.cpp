@@ -1,7 +1,7 @@
 #include "tga.h"
 
 TGAImg::TGAImg()
-{ 
+{
 	pImage=pPalette=pData=NULL;
 	iWidth=iHeight=iBPP=bEnc=0;
 	lImageSize=0;

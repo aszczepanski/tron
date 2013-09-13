@@ -86,14 +86,13 @@ void* ServerTCPConnection::start_routine()
 			common::Move move;
 			player.getPosition(move.x, move.y);
 			player.getDirection(move.direction);
-			if (move.direction != direction)
-			{
-				std::cout << "directions: " << move.direction << " " << direction << std::endl;
-				move.direction = direction;
-				sharedMemory.addMove(player, move);
 
-			}
-			
+                        std::cout << "directions: " << move.direction << " " << direction << std::endl;
+                        if( direction == common::WEST) // Turn right
+                          move.direction = (common::Direction) ((move.direction + 1) % 4);
+                        else if (direction == common::EAST) // Turn left
+                          move.direction = (common::Direction) ((move.direction + 3) % 4);
+                        sharedMemory.addMove(player, move);
 
 			// send broadcast
 			REQUEST turnToSend;

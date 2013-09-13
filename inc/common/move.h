@@ -6,16 +6,16 @@ namespace common
 
 enum Direction
 {
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST
+	NORTH = 0,
+	EAST = 1,
+	SOUTH = 2,
+	WEST = 3
 };
 
 struct Move
 {
 	int x, y;
-	Direction direction;	
+	Direction direction;
 };
 
 }
