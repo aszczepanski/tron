@@ -24,6 +24,10 @@ public:
 	void closeSocket();
 	void closeConnection();
 	ServerTCP waitForSocket();
+
+	friend bool operator>(const ServerTCP&, const ServerTCP&);
+	friend bool operator<(const ServerTCP&, const ServerTCP&);
+	friend bool operator==(const ServerTCP&, const ServerTCP&);
 private:
 	int sockfd;
 	int in_sockfd;

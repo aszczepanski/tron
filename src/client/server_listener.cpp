@@ -1,5 +1,6 @@
 #include <client/server_listener.h>
-#include <client/client_udp.h>
+//#include <client/client_udp.h>
+#include <client/client_tcp.h>
 #include <common/logger.h>
 #include <common/protocol.h>
 #include <cstddef>
@@ -11,15 +12,15 @@
 using namespace client;
 using namespace std;
 
-ServerListener::ServerListener(const string& hostname, const string& port, SharedMemory& sharedMemory)
-	: IThread(), client(hostname, port), sharedMemory(sharedMemory)
+ServerListener::ServerListener(SharedMemory& sharedMemory, ClientTCP& client)
+	: IThread(), client(client), sharedMemory(sharedMemory)
 {
 }
 
 void* ServerListener::start_routine()
 {
-	common::Logger::getInstance().log("CLIENT UDP listener start");
-
+	common::Logger::getInstance().log("CLIENT TCP listener start");
+/*
 	REQUEST request;
 	bzero(&request, sizeof(REQUEST));
 	request.request_type = REQUEST::REGISTER_LISTENER;
@@ -36,16 +37,17 @@ void* ServerListener::start_routine()
 	client.receive(&c, 1);
 
 	common::Logger::getInstance().debug(static_cast<int>(c));
-
+*/
+	REQUEST request;
 	while (true)
 	{
-		bzero(&request, sizeof(REQUEST));
+		memset(&request, 0, sizeof(REQUEST));
 		client.receive(&request, sizeof(REQUEST));
-		cout << request.length << endl;
+		//cout << request.length << endl;
 
 		if (request.request_type == REQUEST::END_GAME)
 		{
-			common::Logger::getInstance().debug("CLIENT UDP request end");
+			common::Logger::getInstance().debug("CLIENT TCP request end");
 
 			sharedMemory.setEnd();
 			std::cout << "\t\t" << sharedMemory.getEnd() << std::endl;
@@ -54,7 +56,7 @@ void* ServerListener::start_routine()
 		}
 		else if (request.request_type == REQUEST::LEAVE_GAME)
 		{
-			common::Logger::getInstance().debug("CLIENT UDP request leave");
+			common::Logger::getInstance().debug("CLIENT TCP request leave");
 			string token;
 			unsigned char c;
 			for (int i=0; i<request.length; i++)
@@ -73,7 +75,7 @@ void* ServerListener::start_routine()
 		}
 		else if (request.request_type == REQUEST::STAGE_INFO)
 		{
-			cout << "CLIENT stage info received\n";
+			//cout << "CLIENT stage info received\n";
 
 			for (int i=0; i<request.length; i++)
 			{
@@ -81,8 +83,8 @@ void* ServerListener::start_routine()
 				memset(&playerInfo, 0, sizeof(PLAYER_INFO));
 				client.receive(&playerInfo, sizeof(PLAYER_INFO));
 
-				cout << "playerInfo.player_no: " << playerInfo.player_no << std::endl;
-				cout << playerInfo.x << " " << playerInfo.y << endl;
+				//cout << "playerInfo.player_no: " << playerInfo.player_no << std::endl;
+				//cout << playerInfo.x << " " << playerInfo.y << endl;
 
 				sharedMemory.addPosition(playerInfo);
 			}
@@ -103,6 +105,22 @@ void* ServerListener::start_routine()
 
 				sharedMemory.addTurn(newTurn);
 			}
+		}
+		else if (request.request_type == REQUEST::REGISTER_TOKEN)
+		{
+			string token;
+
+			char byte;
+			for (int i=0; i<request.length; i++)
+			{
+				client.receive(&byte, 1);
+				token += byte;
+			}
+
+			std::cout << "\t\t" << token << std::endl;
+
+			sharedMemory.setToken(token);
+
 		}
 		else if (request.request_type == REQUEST::NEW_CRASH)
 		{
@@ -129,7 +147,7 @@ void* ServerListener::start_routine()
 		}
 	}
 
-	client.closeSocket();
+//	client.closeSocket();
 
 	std::cout << "CLIENT socket closed\n";
 

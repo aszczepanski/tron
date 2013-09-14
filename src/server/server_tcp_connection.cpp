@@ -7,6 +7,7 @@
 #include <cstring>
 #include <iostream>
 #include <ctime>
+#include <vector>
 #include <common/mutex.h>
 
 using namespace server;
@@ -25,7 +26,6 @@ void* ServerTCPConnection::start_routine()
 
 	while (true)
 	{
-
 		REQUEST request;
 		memset(&request, 0, sizeof(REQUEST));
 
@@ -39,9 +39,9 @@ void* ServerTCPConnection::start_routine()
 			request.length = 0;
 
 			// send broadcast
-			SharedMemory::UDPMutex.lock();
-			sharedMemory.sendUDPbroadcast(&request, sizeof(REQUEST));
-			SharedMemory::UDPMutex.unlock();
+			SharedMemory::TCPMutex.lock();
+			sharedMemory.sendTCPbroadcast(&request, sizeof(REQUEST));
+			SharedMemory::TCPMutex.unlock();
 
 			sharedMemory.setEnd();
 
@@ -60,16 +60,16 @@ void* ServerTCPConnection::start_routine()
 			}
 			logger.debug("SERVER TCP token " + token);
 
-			SharedMemory::UDPMutex.lock();		
+			SharedMemory::TCPMutex.lock();		
 	
 			// send broadcast
-			sharedMemory.sendUDPbroadcast(&request, sizeof(REQUEST));
+			sharedMemory.sendTCPbroadcast(&request, sizeof(REQUEST));
 			for (int i=0; i<request.length; i++)
 			{
-				sharedMemory.sendUDPbroadcast(&token[i], 1);
+				sharedMemory.sendTCPbroadcast(&token[i], 1);
 			}
 
-			SharedMemory::UDPMutex.unlock();
+			SharedMemory::TCPMutex.unlock();
 
 			sharedMemory.removePlayer(token);
 
@@ -106,15 +106,15 @@ void* ServerTCPConnection::start_routine()
 			newTurn.move.y = move.y;
 			newTurn.move.direction = direction;
 
-			SharedMemory::UDPMutex.lock();
-			sharedMemory.sendUDPbroadcast(&turnToSend, sizeof(REQUEST));
-			sharedMemory.sendUDPbroadcast(&newTurn, sizeof(TURN_INFO));
-			SharedMemory::UDPMutex.unlock();
+			SharedMemory::TCPMutex.lock();
+			sharedMemory.sendTCPbroadcast(&turnToSend, sizeof(REQUEST));
+			sharedMemory.sendTCPbroadcast(&newTurn, sizeof(TURN_INFO));
+			SharedMemory::TCPMutex.unlock();
 
 		}
 		else if (request.request_type == REQUEST::STAGE_INFO)
 		{
-			std::cout << "SERVER REQUEST::STAGE_INFO\n";
+			//std::cout << "SERVER REQUEST::STAGE_INFO\n";
 			std::vector<Player> players;
 			sharedMemory.getPlayers(players);
 
@@ -123,8 +123,8 @@ void* ServerTCPConnection::start_routine()
 			stageInfo.request_type = REQUEST::STAGE_INFO;
 			stageInfo.length = players.size();
 
-			SharedMemory::UDPMutex.lock();
-			sharedMemory.sendUDPbroadcast(&stageInfo, sizeof(REQUEST));
+			SharedMemory::TCPMutex.lock();
+			sharedMemory.sendTCPbroadcast(&stageInfo, sizeof(REQUEST));
 
 			for (int i=0; i<stageInfo.length; i++)
 			{
@@ -134,12 +134,12 @@ void* ServerTCPConnection::start_routine()
 				players[i].getPosition(playerInfo.x, playerInfo.y);
 				players[i].getDirection(playerInfo.direction);
 
-				std::cout << "SERVER position\t\t\t\t" << playerInfo.player_no << " " << playerInfo.x << " " << playerInfo.y << std::endl;
+				//std::cout << "SERVER position\t\t\t\t" << playerInfo.player_no << " " << playerInfo.x << " " << playerInfo.y << std::endl;
 
-				sharedMemory.sendUDPbroadcast(&playerInfo, sizeof(PLAYER_INFO));
+				sharedMemory.sendTCPbroadcast(&playerInfo, sizeof(PLAYER_INFO));
 			}
 	
-			SharedMemory::UDPMutex.unlock();
+			SharedMemory::TCPMutex.unlock();
 
 		}
 		else if (request.request_type == REQUEST::REGISTER_TOKEN)
@@ -152,17 +152,19 @@ void* ServerTCPConnection::start_routine()
 			srand(time(0));
 
 			char token[TOKEN_SIZE];
+			playerToken = "";
 			for (int i=0; i<TOKEN_SIZE; i++)
 			{
 				token[i] = 'a' + rand()%26;
+				playerToken += token[i];
 			}
 
-			SharedMemory::UDPMutex.lock();
+			SharedMemory::TCPMutex.lock();
 			server.send(&request, sizeof(REQUEST));
 			server.send(&token, TOKEN_SIZE);
-			SharedMemory::UDPMutex.unlock();
+			SharedMemory::TCPMutex.unlock();
 
-			playerToken = token;
+			sharedMemory.addPlayer(playerToken, server);
 		}
 		else if (request.request_type == REQUEST::START_GAME)
 		{
@@ -171,6 +173,12 @@ void* ServerTCPConnection::start_routine()
 		}
 	}
 
+	sleep(1);
+
 	server.closeConnection();
 
+	if (sharedMemory.getEnd())
+	{
+		exit(0);
+	}
 }

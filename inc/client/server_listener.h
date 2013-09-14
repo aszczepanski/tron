@@ -2,7 +2,8 @@
 #define SERVER_LISTENER_H
 
 #include <common/ithread.h>
-#include <client/client_udp.h>
+#include <client/client_tcp.h>
+//#include <client/client_udp.h>
 #include <string>
 #include <client/shared_memory.h>
 
@@ -13,10 +14,11 @@ class ServerListener
 	: public common::IThread
 {
 public:
-	ServerListener(const std::string& hostname, const std::string& port, SharedMemory&);
+	ServerListener(SharedMemory&, ClientTCP&);
 private:
 	void* start_routine();
-	ClientUDP client;
+	ClientTCP& client;
+	//ClientUDP client;
 	SharedMemory& sharedMemory;
 };
 

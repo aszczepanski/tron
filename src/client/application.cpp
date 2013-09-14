@@ -12,7 +12,8 @@
 using namespace client;
 
 Application::Application(bool host, const std::string& hostName, const std::string& portName)
-	: host(host), sharedMemory(SharedMemory::getInstance()), serverSender(hostName, portName, sharedMemory), serverListener(hostName, portName, sharedMemory)
+	: host(host), sharedMemory(SharedMemory::getInstance()), client(hostName,portName),
+		serverSender(sharedMemory,client), serverListener(sharedMemory,client)
 {
 }
 
@@ -29,14 +30,10 @@ void* Application::start_routine()
 		sharedMemory.setServerSender(&serverSender);
 		sharedMemory.setHost(host);
 
-//		OpenGLMain ogl(sharedMemory);
-//		ogl.run();
-
 		while (!sharedMemory.getEnd())
 		{
 			usleep(40000u);
 			serverSender.getStageInfo();
-			std::cout << "CLIENT stage info request sent\n";
 		}
 
 		serverListener.wait();

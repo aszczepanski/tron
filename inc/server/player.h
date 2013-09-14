@@ -2,7 +2,8 @@
 #define PLAYER_H
 
 #include <string>
-#include <server/server_udp.h>
+//#include <server/server_udp.h>
+#include <server/server_tcp.h>
 #include <common/move.h>
 #include <common/player_data.h>
 #include <common/mutex.h>
@@ -13,11 +14,11 @@ namespace server
 class Player
 {
 public:
-	Player(const std::string& token, const ServerUDP&, int x=0, int y=0, common::Direction direction=common::NORTH);
+	Player(const std::string& token, const ServerTCP&, int x=0, int y=0, common::Direction direction=common::NORTH);
 	Player(const Player&);
 	Player& operator=(const Player&);
 
-	ServerUDP getServerUDP() const;
+	ServerTCP getServerTCP() const;
 	std::string getToken() const;
 
 	void clearAlive() const;
@@ -33,15 +34,15 @@ public:
 	void updatePosition() const;
 
 	friend bool operator>(const Player&, const Player&);
-	friend bool operator>(const Player&, const ServerUDP&);
+	friend bool operator>(const Player&, const ServerTCP&);
 	friend bool operator<(const Player&, const Player&);
-	friend bool operator<(const Player&, const ServerUDP&);
+	friend bool operator<(const Player&, const ServerTCP&);
 	friend bool operator==(const Player&, const Player&);
-	friend bool operator==(const Player&, const ServerUDP&);
+	friend bool operator==(const Player&, const ServerTCP&);
 private:
 	// token has to be unique !!!
 	std::string token;
-	ServerUDP serverUDP;
+	ServerTCP serverTCP;
 
 	unsigned int nr;
 

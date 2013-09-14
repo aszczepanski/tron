@@ -1,5 +1,6 @@
 #include <server/player.h>
-#include <server/server_udp.h>
+//#include <server/server_udp.h>
+#include <server/server_tcp.h>
 #include <string>
 #include <iostream>
 
@@ -8,14 +9,14 @@ using namespace std;
 
 unsigned int Player::highestPlayerNr = 0;
 
-Player::Player(const std::string& token, const ServerUDP& server, int x, int y, common::Direction direction)
-	: token(token), serverUDP(server), nr(highestPlayerNr), x(x), y(y), direction(direction), alive(true)
+Player::Player(const std::string& token, const ServerTCP& server, int x, int y, common::Direction direction)
+	: token(token), serverTCP(server), nr(highestPlayerNr), x(x), y(y), direction(direction), alive(true)
 {
 	highestPlayerNr++;
 }
 
 Player::Player(const Player& player)
-	: token(player.getToken()), serverUDP(player.getServerUDP()), nr(player.getNr())
+	: token(player.getToken()), serverTCP(player.getServerTCP()), nr(player.getNr())
 {
 	player.getPosition(x,y);
 	player.getDirection(direction);
@@ -32,13 +33,13 @@ Player& Player::operator=(const Player& player)
 	return *this;
 }
 
-ServerUDP Player::getServerUDP() const
+ServerTCP Player::getServerTCP() const
 {
 	mutex.lock();
-	ServerUDP tmpServerUDP = serverUDP;
+	ServerTCP tmpServerTCP = serverTCP;
 	mutex.unlock();
 
-	return tmpServerUDP;
+	return tmpServerTCP;
 }
 
 void Player::clearAlive() const

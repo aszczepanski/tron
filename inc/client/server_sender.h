@@ -13,7 +13,7 @@ namespace client
 class ServerSender
 {
 public:
-	ServerSender(const std::string& hostname, const std::string& port, SharedMemory&);
+	ServerSender(SharedMemory&, ClientTCP&);
 	void registerClient();
 	void endGame();
 	void leaveGame();
@@ -25,7 +25,7 @@ public:
 
 	static common::Mutex mutex;
 private:
-	ClientTCP client;
+	ClientTCP& client;
 	SharedMemory& sharedMemory;
 };
 

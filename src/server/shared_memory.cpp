@@ -1,6 +1,7 @@
 #include <server/shared_memory.h>
 #include <server/server_tcp_connection.h>
-#include <server/server_udp.h>
+//#include <server/server_udp.h>
+#include <server/server_tcp.h>
 #include <server/player.h>
 #include <set>
 #include <iostream>
@@ -13,14 +14,15 @@
 using namespace server;
 using namespace std;
 
-common::Mutex SharedMemory::UDPMutex;
+//common::Mutex SharedMemory::UDPMutex;
+common::Mutex SharedMemory::TCPMutex;
 
 SharedMemory::SharedMemory()
 	: end(false), start(false)
 {
 }
 
-void SharedMemory::addPlayer(const string& token, const ServerUDP& server)
+void SharedMemory::addPlayer(const string& token, const ServerTCP& server)
 {
 	int x,y;
 	common::Direction direction;
@@ -47,7 +49,7 @@ void SharedMemory::addPlayer(const string& token, const ServerUDP& server)
 	std::cout << players.size() << std::endl;
 }
 
-void SharedMemory::removePlayer(const string& token, const ServerUDP& server)
+void SharedMemory::removePlayer(const string& token, const ServerTCP& server)
 {
 	Player playerToRemove(token, server);
 
@@ -62,7 +64,7 @@ void SharedMemory::removePlayer(const string& token, const ServerUDP& server)
 
 void SharedMemory::removePlayer(const string& token)
 {
-	Player playerToRemove(token, getServerUDP(token));
+	Player playerToRemove(token, getServerTCP(token));
 
 	std::cout << players.size() << std::endl;
 
@@ -97,17 +99,17 @@ void SharedMemory::setDead(const int nr) const
 	request.length = 1;
 
 
-	UDPMutex.lock();
+	TCPMutex.lock();
 	for (std::set<Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
 	{
-		(it2->getServerUDP()).send(&request, sizeof(REQUEST));
-		(it2->getServerUDP()).send(&crash, sizeof(CRASH_INFO));
+		(it2->getServerTCP()).send(&request, sizeof(REQUEST));
+		(it2->getServerTCP()).send(&crash, sizeof(CRASH_INFO));
 	}
-	UDPMutex.unlock();
+	TCPMutex.unlock();
 
 }
 
-ServerUDP SharedMemory::getServerUDP(const string& token)
+ServerTCP SharedMemory::getServerTCP(const string& token)
 {
 	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
@@ -116,19 +118,19 @@ ServerUDP SharedMemory::getServerUDP(const string& token)
 		if (it->getToken() == token)
 		{
 			playersMutex.unlock();
-			return it->getServerUDP();
+			return it->getServerTCP();
 		}
 	}
 	playersMutex.unlock();
 	throw 0; // exceptions !!!
 }
 
-void SharedMemory::sendUDPbroadcast(void* msg, size_t size)
+void SharedMemory::sendTCPbroadcast(void* msg, size_t size)
 {
 	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
-		(it->getServerUDP()).send(msg, size);
+		(it->getServerTCP()).send(msg, size);
 	}
 	playersMutex.unlock();
 }
@@ -185,12 +187,12 @@ void SharedMemory::getPlayers(vector<Player>& _players)
 	playersMutex.unlock();
 }
 
-Player SharedMemory::getPlayer(const ServerUDP& server) const
+Player SharedMemory::getPlayer(const ServerTCP& server) const
 {
 	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
-		if (it->getServerUDP() == server)
+		if (it->getServerTCP() == server)
 		{
 			playersMutex.unlock();
 			return *it;
@@ -408,17 +410,17 @@ void SharedMemory::setStart()
 			it->getPosition(newTurn.move.x, newTurn.move.y);
 			it->getDirection(newTurn.move.direction);
 
-			UDPMutex.lock();
-			it->getServerUDP().send(&request, sizeof(REQUEST));
-			it->getServerUDP().send(&startInfo, sizeof(START_INFO));
+			TCPMutex.lock();
+			it->getServerTCP().send(&request, sizeof(REQUEST));
+			it->getServerTCP().send(&startInfo, sizeof(START_INFO));
 			
 			for (std::set<Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
 			{
-				(it2->getServerUDP()).send(&turnToSend, sizeof(REQUEST));
-				(it2->getServerUDP()).send(&newTurn, sizeof(TURN_INFO));
+				(it2->getServerTCP()).send(&turnToSend, sizeof(REQUEST));
+				(it2->getServerTCP()).send(&newTurn, sizeof(TURN_INFO));
 			}
 			
-			UDPMutex.unlock();
+			TCPMutex.unlock();
 
 			for (set<Player>::iterator it3 = players.begin(); it3 != players.end(); it3++)
 			{

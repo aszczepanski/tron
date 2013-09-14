@@ -73,9 +73,9 @@ ServerTCP::~ServerTCP()
 
 void ServerTCP::send(void* msg, size_t size) const
 {
-	mutex.lock();
+//	mutex.lock();
 	int st = write(in_sockfd, msg, size);
-	mutex.unlock();
+//	mutex.unlock();
 	if (-1 == st)
 	{
 		perror("write error");
@@ -85,9 +85,9 @@ void ServerTCP::send(void* msg, size_t size) const
 
 void ServerTCP::receive(void* buf, size_t size) const
 {
-	mutex.lock();
+//	mutex.lock();
 	int st = read(in_sockfd, buf, size);
-	mutex.unlock();
+//	mutex.unlock();
 	if (-1 == st)
 	{
 		perror("read error");
@@ -119,10 +119,10 @@ ServerTCP ServerTCP::waitForSocket()
 	sockaddr_in in_addr;
 	socklen = sizeof(in_addr);
 	
-	mutex.lock();
+//	mutex.lock();
 	int new_sockfd = accept(sockfd, (sockaddr*)&in_addr, &socklen);
 	std::cout << "new_sockfd = " << new_sockfd << std::endl;
-	mutex.unlock();
+//	mutex.unlock();
 	if (new_sockfd == -1)
 	{
 		perror("accept");
@@ -131,4 +131,23 @@ ServerTCP ServerTCP::waitForSocket()
 	ServerTCP result = ServerTCP(*this);
 	result.in_sockfd = new_sockfd;
 	return result;
+}
+
+// it is possibly wrong
+namespace server
+{
+bool operator>(const ServerTCP& a, const ServerTCP& b)
+{
+	return a.in_sockfd > b.in_sockfd;
+}
+
+bool operator<(const ServerTCP& a, const ServerTCP& b)
+{
+	return a.in_sockfd < b.in_sockfd;
+}
+
+bool operator==(const ServerTCP& a, const ServerTCP& b)
+{
+	return a.sockfd == b.sockfd;
+}
 }

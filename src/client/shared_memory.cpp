@@ -100,7 +100,6 @@ void SharedMemory::getPositions(std::vector<PLAYER_INFO>& positions) const
 
 void SharedMemory::addPosition(PLAYER_INFO playerInfo)
 {
-	std::cout << "to add: \t\t" << playerInfo.x << " " << playerInfo.y << std::endl;
 	mutex.lock();
 	positions[playerInfo.player_no] = playerInfo;
 	mutex.unlock();

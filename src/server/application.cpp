@@ -22,8 +22,8 @@ void* server::Application::start_routine()
 		cl.run();
 
 		// UDP test
-		server::ServerUDPListener sl("6060", sharedMemory);
-		sl.run();
+//		server::ServerUDPListener sl("6060", sharedMemory);
+//		sl.run();
 
 		while (!sharedMemory.getStart())
 		{
@@ -42,7 +42,7 @@ void* server::Application::start_routine()
 		}
 
 		cl.wait();
-		sl.wait();
+//		sl.wait();
 
 		std::cout << "server app leaving\n";
 	}

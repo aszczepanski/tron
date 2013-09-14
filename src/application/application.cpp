@@ -11,6 +11,8 @@
 #include <client/open_gl_main.h>
 #include <client/shared_memory.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 using namespace application;
 
@@ -43,8 +45,13 @@ void Application::run()
 		}
 		else if (2 == n)
 		{
-			server::Application serverApp;
-			serverApp.run();
+			if (fork() == 0) {
+				server::Application serverApp;
+				serverApp.run();
+				serverApp.wait();
+			}
+			else
+			{
 
 			// required to give time for server to prepare
 			// rly bad method ;p
@@ -64,6 +71,9 @@ void Application::run()
 
 			// TODO closing connection on server side
 			//serverApp.wait();
+
+			wait(NULL);
+			}
 		}
 		else
 		{

@@ -4,13 +4,14 @@
 #include <cstring>
 #include <common/protocol.h>
 #include <client/shared_memory.h>
+#include <client/client_tcp.h>
 
 using namespace client;
 
 common::Mutex ServerSender::mutex;
 
-ServerSender::ServerSender(const std::string& hostname, const std::string& port, SharedMemory& sharedMemory)
-	: client(hostname, port), sharedMemory(sharedMemory)
+ServerSender::ServerSender(SharedMemory& sharedMemory, ClientTCP& client)
+	: client(client), sharedMemory(sharedMemory)
 {
 }
 
@@ -72,23 +73,6 @@ void ServerSender::registerClient()
 	client.send(&request, sizeof(REQUEST));
 	mutex.unlock();
 
-	bzero(&request, sizeof(REQUEST));
-	client.receive(&request, sizeof(REQUEST));
-
-	std::cout << "\t\t" << request.length << std::endl;
-
-	token.clear();
-
-	unsigned char byte;
-	for (int i=0; i<request.length; i++)
-	{
-		client.receive(&byte, 1);
-		token += byte;
-	}
-
-	std::cout << "\t\t" << token << std::endl;
-
-	sharedMemory.setToken(token);
 }
 
 void ServerSender::sendTurn(common::Direction direction)

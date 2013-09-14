@@ -69,9 +69,9 @@ void ClientTCP::closeSocket()
 void ClientTCP::send(void* msg, size_t size) const
 {
 	assert(connectionOpened);
-	mutex.lock();
+//	mutex.lock();
 	int st = write(sockfd, msg, size);
-	mutex.unlock();
+//	mutex.unlock();
 
 	if (-1 == st)
 	{
@@ -83,9 +83,9 @@ void ClientTCP::send(void* msg, size_t size) const
 void ClientTCP::receive(void* buf, size_t size) const
 {
 	assert(connectionOpened);
-	mutex.lock();
+//	mutex.lock();
 	int st = read(sockfd, buf, size);
-	mutex.unlock();
+//	mutex.unlock();
 
 	if (-1 == st)
 	{
