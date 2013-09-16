@@ -2,7 +2,6 @@
 #include <server/shared_memory.h>
 #include <common/logger.h>
 #include <server/server_tcp_listener.h>
-#include <server/server_udp_listener.h>
 #include <iostream>
 #include <server/player.h>
 #include <vector>
@@ -21,10 +20,6 @@ void* server::Application::start_routine()
 		server::ServerTCPListener cl("6060", sharedMemory);
 		cl.run();
 
-		// UDP test
-//		server::ServerUDPListener sl("6060", sharedMemory);
-//		sl.run();
-
 		while (!sharedMemory.getStart())
 		{
 			std::cout << "\t\t\t" << sharedMemory.getStart() << std::endl;
@@ -33,7 +28,6 @@ void* server::Application::start_routine()
 
 		std::cout << "\t\tstarting\n";
 
-		//for (int i=0; i<15; i++)
 		while(!sharedMemory.getEnd())
 		{
 			sharedMemory.updatePositions();
@@ -42,7 +36,6 @@ void* server::Application::start_routine()
 		}
 
 		cl.wait();
-//		sl.wait();
 
 		std::cout << "server app leaving\n";
 	}

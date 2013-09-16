@@ -21,10 +21,8 @@ void* Application::start_routine()
 {
 	try
 	{
-		// TCP test
 		serverSender.registerClient();
 
-		// UDP test
 		serverListener.run();
 
 		sharedMemory.setServerSender(&serverSender);
