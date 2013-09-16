@@ -5,6 +5,7 @@
 #include <client/world.h>
 #include <client/box.h>
 #include <client/axis.h>
+#include <client/texture_manager.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <string>
@@ -18,8 +19,6 @@
 #include <vector>
 #include <iostream>
 
-#include <client/lodepng.h>
-
 using namespace client;
 using glm::mat4;
 using glm::vec3;
@@ -29,11 +28,6 @@ std::vector<TURN_INFO> OpenGLMain::turns;
 std::vector<CRASH_INFO> OpenGLMain::crashes;
 int OpenGLMain::lastTime_;
 int nr;
-
-GLuint tex;
-TGAImg img;
-
-std::vector<unsigned char> image;
 
 Camera* camera;
 Lighting* lighting;
@@ -87,6 +81,8 @@ void OpenGLMain::drawBikes() {
 }
 
 void OpenGLMain::drawTrails() {
+
+  //TODO
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
@@ -99,48 +95,42 @@ void OpenGLMain::drawTrails() {
     int number = it->first;
     std::vector<TURN_INFO> list = it->second;
 
-    for(int i = 0; i < list.size(); i++){
-      TURN_INFO turn = list[i];
-
-      vec3 begin = vec3(turn.move.x, turn.move.y, 0);
-      vec3 end;
-
-      if (i != list.size()-1)
-        end = vec3(list[i+1].move.x, list[i+1].move.y, 0);
-      else
-        end = vec3(positions[number].x, positions[number].y, 0);
-
-      vec3 size = end - begin;
-      if( size.x == 0) size.x = 0.1;
-      if( size.y == 0) size.y = 0.1;
-      size.z = 1;
-
-      mat4 M = World::transform(vec3(turn.move.x, turn.move.y, 0));
-      Box* box = new Box(size);
-      box->draw(M, tex);
-      delete box;
-    }
+    drawPlayerTrail(positions[number], list);
   }
+  //TODO
+  glDisable(GL_BLEND);
+}
 
-  /*for (std::vector<TURN_INFO>::iterator it = turns.begin(); it != turns.end(); it++) {
-    // TODO color
-    vec3 begin = vec3(it->move.x, it->move.y, 0);
+void OpenGLMain::drawPlayerTrail(PLAYER_INFO position, std::vector<TURN_INFO> &list){
+  for(int i = 0; i < list.size(); i++){
+    TURN_INFO turn = list[i];
+
+    vec3 begin = vec3(turn.move.x, turn.move.y, 0);
     vec3 end;
-    if (it != turns.end() - 1)
-      end = vec3((it + 1)->move.x, (it + 1)->move.y, 0);
+
+    if (i != list.size()-1)
+      end = vec3(list[i+1].move.x, list[i+1].move.y, 0);
     else
-      end = vec3(positions[0].x, positions[0].y, 0);
+      end = vec3(position.x, position.y, 0);
+
     vec3 size = end - begin;
     if( size.x == 0) size.x = 0.1;
     if( size.y == 0) size.y = 0.1;
     size.z = 1;
 
-    mat4 M = World::transform(vec3(it->move.x, it->move.y, 0));
+    mat4 M = World::transform(vec3(turn.move.x, turn.move.y, 0));
     Box* box = new Box(size);
-    box->draw(M, tex);
-  }*/
 
-   glDisable(GL_BLEND);
+    std::string texture;
+    //TODO colorManager
+    if(position.player_no == 1)
+      texture = "blue";
+    else
+      texture = "red";
+
+    box->draw(M, texture);
+    delete box;
+  }
 }
 
 void OpenGLMain::nextFrame()
@@ -165,39 +155,8 @@ int OpenGLMain::passedTime() {
 
 
 void OpenGLMain::loadTextures(){
-  unsigned width, height;
-  unsigned error = lodepng::decode(image, width, height, "src/client/texture.png");
-
-  if (error != 0) {
-    std::cout << "error " << error << ": " << lodepng_error_text(error) << std::endl;
-    return;
-  }
-
-  glEnable(GL_TEXTURE_2D);
-
-  glGenTextures(1, &tex); //Zainicjuj uchwyt tex
-  glBindTexture(GL_TEXTURE_2D,tex); //Przetwarzaj uchwyt tex
-
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
-
-  /*if (img.Load("src/client/bricks.tga")==IMG_OK) {
-    glGenTextures(1,&tex); //Zainicjuj uchwyt tex
-    glBindTexture(GL_TEXTURE_2D,tex); //Przetwarzaj uchwyt tex
-    if (img.GetBPP()==24) //Obrazek 24bit
-      glTexImage2D(GL_TEXTURE_2D,0,3,img.GetWidth(),img.GetHeight(),0,
-          GL_RGB,GL_UNSIGNED_BYTE,img.GetImg());
-    else if (img.GetBPP()==32)
-      //Obrazek 32bit
-      glTexImage2D(GL_TEXTURE_2D,0,4,img.GetWidth(),img.GetHeight(),0,
-          GL_RGBA,GL_UNSIGNED_BYTE,img.GetImg());
-    else {
-      //Obrazek 16 albo 8 bit, takimi się nie przejmujemy
-    }
-  }
-  else {
-    // błąd
-    std::cout << "error\n";
-  }*/
+  TextureManager::importTexture("blue", "src/client/texture.png");
+  TextureManager::importTexture("red", "src/client/red_trail.png");
 }
 
 void OpenGLMain::Init(){

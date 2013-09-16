@@ -2,6 +2,7 @@
 #define OPEN_GL_MAIN_H
 
 #include <client/shared_memory.h>
+#include <vector>
 
 namespace client
 {
@@ -20,6 +21,7 @@ private:
         static void Init();
         static void drawBikes();
         static void drawTrails();
+        static void drawPlayerTrail(PLAYER_INFO position, std::vector<TURN_INFO>& list);
 
 	SharedMemory& sharedMemory;
 

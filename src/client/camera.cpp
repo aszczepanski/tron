@@ -4,7 +4,7 @@
 namespace client {
 
 Camera::Camera() {
-  speed_ = 1;
+  speed_ = 1.8;
   // TODO distance should change according to bike speed
   height_ = 5;
   distance_ = 10;

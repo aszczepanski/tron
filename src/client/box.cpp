@@ -100,7 +100,7 @@ Box::Box(vec3 dimensions){
 
 Box::~Box(){}
 
-void Box::draw(mat4 M, GLuint texture){
+void Box::draw(mat4 M, std::string texture){
   for(int i = 0; i < 24 * 3; i+=3){
     boxVertices[i+0] *= _dimensions.x;
     boxVertices[i+1] *= _dimensions.y;
@@ -109,10 +109,8 @@ void Box::draw(mat4 M, GLuint texture){
 
   glLoadMatrixf(glm::value_ptr(World::getV() * M));
 
-
-  glBindTexture(GL_TEXTURE_2D, texture);
-
-  if(texture){
+  if(texture != ""){
+    TextureManager::setTexture(texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
