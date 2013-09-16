@@ -28,6 +28,7 @@ std::vector<PLAYER_INFO> OpenGLMain::positions;
 std::vector<TURN_INFO> OpenGLMain::turns;
 std::vector<CRASH_INFO> OpenGLMain::crashes;
 int OpenGLMain::lastTime_;
+int nr;
 
 GLuint tex;
 TGAImg img;
@@ -81,6 +82,7 @@ void OpenGLMain::drawBikes() {
     mat4 M = World::transform(vec3(positions[i].x-0.5, positions[i].y-0.5, 0));
     Box* box = new Box(glm::vec3(1, 1, 1));
     box->draw(M);
+    delete box;
   }
 }
 
@@ -88,7 +90,39 @@ void OpenGLMain::drawTrails() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-  for (std::vector<TURN_INFO>::iterator it = turns.begin(); it != turns.end(); it++) {
+  std::map<int, std::vector<TURN_INFO> > playerTurns;
+
+  for(int i = 0; i < turns.size(); i++)
+    playerTurns[turns[i].player_no].push_back(turns[i]);
+
+  for (std::map<int, std::vector<TURN_INFO> >::iterator it = playerTurns.begin(); it != playerTurns.end(); it++){
+    int number = it->first;
+    std::vector<TURN_INFO> list = it->second;
+
+    for(int i = 0; i < list.size(); i++){
+      TURN_INFO turn = list[i];
+
+      vec3 begin = vec3(turn.move.x, turn.move.y, 0);
+      vec3 end;
+
+      if (i != list.size()-1)
+        end = vec3(list[i+1].move.x, list[i+1].move.y, 0);
+      else
+        end = vec3(positions[number].x, positions[number].y, 0);
+
+      vec3 size = end - begin;
+      if( size.x == 0) size.x = 0.1;
+      if( size.y == 0) size.y = 0.1;
+      size.z = 1;
+
+      mat4 M = World::transform(vec3(turn.move.x, turn.move.y, 0));
+      Box* box = new Box(size);
+      box->draw(M, tex);
+      delete box;
+    }
+  }
+
+  /*for (std::vector<TURN_INFO>::iterator it = turns.begin(); it != turns.end(); it++) {
     // TODO color
     vec3 begin = vec3(it->move.x, it->move.y, 0);
     vec3 end;
@@ -104,7 +138,7 @@ void OpenGLMain::drawTrails() {
     mat4 M = World::transform(vec3(it->move.x, it->move.y, 0));
     Box* box = new Box(size);
     box->draw(M, tex);
-  }
+  }*/
 
    glDisable(GL_BLEND);
 }
@@ -114,9 +148,10 @@ void OpenGLMain::nextFrame()
   SharedMemory::getInstance().getPositions(positions);
   SharedMemory::getInstance().getTurns(turns);
   SharedMemory::getInstance().getCrashes(crashes);
+  SharedMemory::getInstance().getPlayerNr(nr);
 
   int interval = passedTime();
-  camera->Update(positions[0], interval);
+  camera->Update(positions[nr], interval);
 
   glutPostRedisplay();
 }

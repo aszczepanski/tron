@@ -155,3 +155,9 @@ void SharedMemory::setPlayerNr(const int nr)
 	this->nr = nr;
 	mutex.unlock();
 }
+
+void SharedMemory::getPlayerNr(int &nr) {
+	mutex.lock();
+	nr = this->nr;
+	mutex.unlock();
+}

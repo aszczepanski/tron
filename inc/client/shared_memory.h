@@ -44,6 +44,7 @@ public:
 	void addCrash(CRASH_INFO);
 
 	void setPlayerNr(const int nr);
+	void getPlayerNr(int& nr);
 private:
 	SharedMemory();
 	SharedMemory(const SharedMemory&);
