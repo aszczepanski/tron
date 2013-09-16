@@ -5,7 +5,6 @@
 #include <client/server_sender.h>
 #include <iostream>
 #include <string>
-#include <server/server_udp_listener.h>
 #include <server/application.h>
 #include <client/application.h>
 #include <client/open_gl_main.h>
@@ -46,33 +45,32 @@ void Application::run()
 		else if (2 == n)
 		{
 			if (fork() == 0) {
+				// TODO no need to create seperate thread
 				server::Application serverApp;
 				serverApp.run();
 				serverApp.wait();
 			}
 			else
 			{
+				// required to give time for server to prepare
+				// rly bad method ;p
+				sleep(1);
 
-			// required to give time for server to prepare
-			// rly bad method ;p
-			sleep(1);
+				client::Application clientApp(true);
 
-			client::Application clientApp(true);
+				clientApp.run();
 
-			clientApp.run();
+				// not sure if this is the best idea but works
+				// (should be in seperate process using unix fork,
+				// shared memory and semaphores mechanism)
+				client::OpenGLMain ogl(client::SharedMemory::getInstance());
+				ogl.start();
 
-			// not sure if this is the best idea but works
-			// (should be in seperate process using unix fork,
-			// shared memory and semaphores mechanism)
-			client::OpenGLMain ogl(client::SharedMemory::getInstance());
-			ogl.start();
+				clientApp.wait();
 
-			clientApp.wait();
+				// TODO closing connection on server side
 
-			// TODO closing connection on server side
-			//serverApp.wait();
-
-			wait(NULL);
+				wait(NULL);
 			}
 		}
 		else

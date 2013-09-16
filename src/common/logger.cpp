@@ -2,6 +2,7 @@
 #include <string>
 #include <common/mutex.h>
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 using namespace common;
@@ -18,9 +19,11 @@ Logger& Logger::getInstance()
 
 void Logger::log(const string& s) const
 {
+	time_t curTime;
+	time(&curTime);
 	mutex.lock();
 	cout << "LOG" << endl;
-	cout << "\t" << __TIME__ << endl;
+	cout << "\t" << ctime(&curTime);
 	cout << "\t" << s << endl;
 	mutex.unlock();
 }

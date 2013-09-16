@@ -1,5 +1,4 @@
 #include <client/server_listener.h>
-//#include <client/client_udp.h>
 #include <client/client_tcp.h>
 #include <common/logger.h>
 #include <common/protocol.h>
@@ -20,24 +19,7 @@ ServerListener::ServerListener(SharedMemory& sharedMemory, ClientTCP& client)
 void* ServerListener::start_routine()
 {
 	common::Logger::getInstance().log("CLIENT TCP listener start");
-/*
-	REQUEST request;
-	bzero(&request, sizeof(REQUEST));
-	request.request_type = REQUEST::REGISTER_LISTENER;
-	request.length = TOKEN_SIZE;
 
-	client.send(&request, sizeof(REQUEST));
-
-	for (int i=0; i<TOKEN_SIZE; i++)
-	{
-		client.send(&sharedMemory.getToken()[i], 1);
-	}
-
-	unsigned char c;
-	client.receive(&c, 1);
-
-	common::Logger::getInstance().debug(static_cast<int>(c));
-*/
 	REQUEST request;
 	while (true)
 	{
