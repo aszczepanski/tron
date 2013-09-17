@@ -69,8 +69,12 @@ void Application::run()
 				clientApp.wait();
 
 				// TODO closing connection on server side
+				std::cout << "here1\n";
+
+				std::cout << "waiting for server...\n";
 
 				wait(NULL);
+				std::cout << "here2\n";
 			}
 		}
 		else

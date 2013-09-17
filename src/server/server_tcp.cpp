@@ -21,7 +21,7 @@ ServerTCP::ServerTCP(const std::string& port)
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1)
 	{
-		perror("socket error");
+		perror("server socket error");
 		throw SocketError();
 	}
 
@@ -32,13 +32,13 @@ ServerTCP::ServerTCP(const std::string& port)
 
 	if (bind(sockfd, (sockaddr*)&addr, sizeof(addr)) == -1)
 	{
-		perror("bind error");
+		perror("server bind error");
 		throw BindError();
 	}
 
 	if (listen(sockfd, MAX_WAITING_SERVERS) == -1)
 	{
-		perror("listen error");
+		perror("server listen error");
 		throw ListenError();
 	}
 
@@ -78,7 +78,7 @@ void ServerTCP::send(void* msg, size_t size) const
 //	mutex.unlock();
 	if (-1 == st)
 	{
-		perror("write error");
+		perror("server write error");
 		throw WriteError();
 	}
 }
@@ -90,26 +90,26 @@ void ServerTCP::receive(void* buf, size_t size) const
 //	mutex.unlock();
 	if (-1 == st)
 	{
-		perror("read error");
+		perror("server read error");
 		throw ReadError();
 	}
 }
 
 void ServerTCP::closeSocket()
 {
-	std::cout << "sockfd = " << sockfd << std::endl;
+	std::cout << "server sockfd = " << sockfd << std::endl;
 	if (close(sockfd) < 0)
 	{
-		perror("close sockfd");
+		perror("server close sockfd");
 	}
 }
 
 void ServerTCP::closeConnection()
 {
-	std::cout << "in_sockfd = " << in_sockfd << std::endl;
+	std::cout << "server in_sockfd = " << in_sockfd << std::endl;
 	if (close(in_sockfd) < 0)
 	{
-		perror("close in_sockfd");
+		perror("server close in_sockfd");
 	}
 }
 
@@ -121,11 +121,11 @@ ServerTCP ServerTCP::waitForSocket()
 	
 //	mutex.lock();
 	int new_sockfd = accept(sockfd, (sockaddr*)&in_addr, &socklen);
-	std::cout << "new_sockfd = " << new_sockfd << std::endl;
+	std::cout << "server new_sockfd = " << new_sockfd << std::endl;
 //	mutex.unlock();
 	if (new_sockfd == -1)
 	{
-		perror("accept");
+		perror("server accept");
 		throw AcceptError();
 	}
 	ServerTCP result = ServerTCP(*this);

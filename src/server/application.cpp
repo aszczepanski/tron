@@ -9,8 +9,15 @@
 #include <sys/types.h>
 #include <signal.h>
 
+void sigHandler(int signum)
+{
+	std::cout << "signal: " << signum << std::endl;
+}
+
 void* server::Application::start_routine()
 {
+	signal(SIGPIPE, sigHandler);
+
 	int n;
 	try
 	{

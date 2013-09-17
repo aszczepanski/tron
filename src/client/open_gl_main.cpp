@@ -8,6 +8,7 @@
 #include <client/texture_manager.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <string>
 #include <cstring>
 #include <cstdio>
@@ -168,6 +169,8 @@ void OpenGLMain::Init(){
   glutInitWindowSize(800,800);
   glutInitWindowPosition(0,0);
   glutCreateWindow("Awesome Game");
+
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
   glutDisplayFunc(displayFrame);
   glutIdleFunc(nextFrame);

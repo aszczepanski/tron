@@ -10,7 +10,7 @@ using namespace std;
 unsigned int Player::highestPlayerNr = 0;
 
 Player::Player(const std::string& token, const ServerTCP& server, int x, int y, common::Direction direction)
-	: token(token), serverTCP(server), nr(highestPlayerNr), x(x), y(y), direction(direction), alive(true)
+	: token(token), serverTCP(server), nr(highestPlayerNr), x(x), y(y), direction(direction), alive(true), active(true)
 {
 	highestPlayerNr++;
 }
@@ -21,6 +21,7 @@ Player::Player(const Player& player)
 	player.getPosition(x,y);
 	player.getDirection(direction);
 	alive = player.getAlive();
+	active = player.getActive();
 }
 
 Player& Player::operator=(const Player& player)
@@ -55,6 +56,21 @@ bool Player::getAlive() const
 	bool tmpAlive = alive;
 	mutex.unlock();
 	return tmpAlive;
+}
+
+void Player::clearActive() const
+{
+	mutex.lock();
+	active = false;
+	mutex.unlock();
+}
+
+bool Player::getActive() const
+{
+	mutex.lock();
+	bool tmpActive = active;
+	mutex.unlock();
+	return tmpActive;
 }
 
 string Player::getToken() const

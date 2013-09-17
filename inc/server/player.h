@@ -24,6 +24,9 @@ public:
 	void clearAlive() const;
 	bool getAlive() const;
 
+	void clearActive() const;
+	bool getActive() const;
+
 	unsigned int getNr() const;
 
 	void getPosition(int& x, int& y) const;
@@ -47,6 +50,7 @@ private:
 	unsigned int nr;
 
 	mutable bool alive;
+	mutable bool active;
 
 	static unsigned int highestPlayerNr;
 

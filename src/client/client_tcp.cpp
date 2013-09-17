@@ -18,7 +18,7 @@ ClientTCP::ClientTCP(const string& hostname, const string& port)
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1)
 	{
-		perror("socket error");
+		perror("client socket error");
 		throw SocketError();
 	}
 	
@@ -28,7 +28,7 @@ ClientTCP::ClientTCP(const string& hostname, const string& port)
 	
 	if (inet_aton(hostname.c_str(), (in_addr*)&addr.sin_addr.s_addr) == 0)
 	{
-		perror("aton error");
+		perror("client aton error");
 		throw AtonError();
 	}
 
@@ -36,7 +36,7 @@ ClientTCP::ClientTCP(const string& hostname, const string& port)
 
 	if (connect(sockfd, (sockaddr*)&addr, sizeof(addr)) == -1)
 	{
-		perror("connect error");
+		perror("client connect error");
 		throw ConnectError();
 	}
 
@@ -47,10 +47,10 @@ ClientTCP::~ClientTCP()
 {
 	if (connectionOpened)
 	{
-		std::cout << "sockfd = " << sockfd << endl;
+		std::cout << "client sockfd = " << sockfd << endl;
 		if (close(sockfd) < 0)
 		{
-			perror("close sockfd");
+			perror("client close sockfd");
 		}
 	}
 }
@@ -58,10 +58,10 @@ ClientTCP::~ClientTCP()
 void ClientTCP::closeSocket()
 {
 	assert(connectionOpened);
-	std::cout << "sockfd = " << sockfd << endl;
+	std::cout << "client sockfd = " << sockfd << endl;
 	if (close(sockfd) < 0)
 	{
-		perror("close sockfd");
+		perror("client close sockfd");
 	}
 	connectionOpened = false;
 }
@@ -75,7 +75,7 @@ void ClientTCP::send(void* msg, size_t size) const
 
 	if (-1 == st)
 	{
-		perror("write error");
+		perror("client write error");
 		throw WriteError();
 	}
 }
@@ -89,7 +89,7 @@ void ClientTCP::receive(void* buf, size_t size) const
 
 	if (-1 == st)
 	{
-		perror("read error");
+		perror("client read error");
 		throw ReadError();
 	}
 }

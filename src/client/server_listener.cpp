@@ -129,7 +129,7 @@ void* ServerListener::start_routine()
 		}
 	}
 
-//	client.closeSocket();
+	client.closeSocket();
 
 	std::cout << "CLIENT socket closed\n";
 

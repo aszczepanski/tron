@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <client/open_gl_main.h>
+#include <GL/freeglut.h>
 
 using namespace client;
 
@@ -31,7 +32,9 @@ void* Application::start_routine()
 		while (!sharedMemory.getEnd())
 		{
 			usleep(40000u);
+			std::cout << "a\n";
 			serverSender.getStageInfo();
+			std::cout << "b\n";
 		}
 
 		serverListener.wait();
@@ -44,6 +47,8 @@ void* Application::start_routine()
 		common::Logger::getInstance().error("exception in client test");
 	}
 
-	exit(0);
+	std::cout << "r\n";
+	glutLeaveMainLoop();
+	std::cout << "s\n";
 }
 

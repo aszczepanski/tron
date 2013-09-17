@@ -20,7 +20,6 @@ public:
 	void startGame();
 	void sendTurn(common::Direction);
 	void getStageInfo();
-	void sendByte(unsigned char c);
 	void closeSocket();
 
 	static common::Mutex mutex;

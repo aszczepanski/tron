@@ -22,6 +22,7 @@ public:
 	void addPlayer(const std::string& token, const ServerTCP&);
 	void removePlayer(const std::string& token);
 	void removePlayer(const std::string& token, const ServerTCP&);
+	void removeAllPlayers();
 
 	//void sendUDPbroadcast(void* msg, size_t size);
 	void sendTCPbroadcast(void* msg, size_t size);

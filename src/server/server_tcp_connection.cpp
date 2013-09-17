@@ -29,7 +29,15 @@ void* ServerTCPConnection::start_routine()
 		REQUEST request;
 		memset(&request, 0, sizeof(REQUEST));
 
-		server.receive(&request, sizeof(REQUEST));
+		try
+		{
+			server.receive(&request, sizeof(REQUEST));
+		}
+		catch (...)
+		{
+			std::cout << "here\n";
+			break;
+		}
 
 		if (request.request_type == REQUEST::END_GAME)
 		{
@@ -44,6 +52,8 @@ void* ServerTCPConnection::start_routine()
 			SharedMemory::TCPMutex.unlock();
 
 			sharedMemory.setEnd();
+
+			sharedMemory.removeAllPlayers();
 
 			//break; ???
 			break;
@@ -114,7 +124,7 @@ void* ServerTCPConnection::start_routine()
 		}
 		else if (request.request_type == REQUEST::STAGE_INFO)
 		{
-			//std::cout << "SERVER REQUEST::STAGE_INFO\n";
+			std::cout << "SERVER REQUEST::STAGE_INFO\n";
 			std::vector<Player> players;
 			sharedMemory.getPlayers(players);
 
@@ -140,6 +150,8 @@ void* ServerTCPConnection::start_routine()
 			}
 	
 			SharedMemory::TCPMutex.unlock();
+
+			std::cout << "SERVER REQUEST::STAGE_INFO sent\n";
 
 		}
 		else if (request.request_type == REQUEST::REGISTER_TOKEN)

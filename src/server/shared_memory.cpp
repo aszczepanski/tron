@@ -1,6 +1,5 @@
 #include <server/shared_memory.h>
 #include <server/server_tcp_connection.h>
-//#include <server/server_udp.h>
 #include <server/server_tcp.h>
 #include <server/player.h>
 #include <set>
@@ -14,7 +13,6 @@
 using namespace server;
 using namespace std;
 
-//common::Mutex SharedMemory::UDPMutex;
 common::Mutex SharedMemory::TCPMutex;
 
 SharedMemory::SharedMemory()
@@ -49,6 +47,16 @@ void SharedMemory::addPlayer(const string& token, const ServerTCP& server)
 	std::cout << players.size() << std::endl;
 }
 
+void SharedMemory::removeAllPlayers()
+{
+	std::cout << players.size() << std::endl;
+	playersMutex.lock();
+	for (set<Player>::iterator it = players.begin(); it != players.end(); it++)
+	{
+		it->clearActive();
+	}
+	playersMutex.unlock();
+}
 void SharedMemory::removePlayer(const string& token, const ServerTCP& server)
 {
 	Player playerToRemove(token, server);
@@ -56,23 +64,25 @@ void SharedMemory::removePlayer(const string& token, const ServerTCP& server)
 	std::cout << players.size() << std::endl;
 
 	playersMutex.lock();
-	players.erase(playerToRemove);
+	for (set<Player>::iterator it = players.begin(); it != players.end(); it++)
+	{
+		if (it->getToken() == token)
+		{
+			it->clearActive();
+			playersMutex.unlock();
+			return;
+		}
+	}
 	playersMutex.unlock();
+	std::cout << "xxx\n";
+	throw 1;
 
 	std::cout << players.size() << std::endl;
 }
 
 void SharedMemory::removePlayer(const string& token)
 {
-	Player playerToRemove(token, getServerTCP(token));
-
-	std::cout << players.size() << std::endl;
-
-	playersMutex.lock();
-	players.erase(playerToRemove);
-	playersMutex.unlock();
-
-	std::cout << players.size() << std::endl;
+	removePlayer(token, getServerTCP(token));
 }
 
 void SharedMemory::setDead(const int nr) const
@@ -102,8 +112,11 @@ void SharedMemory::setDead(const int nr) const
 	TCPMutex.lock();
 	for (std::set<Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
 	{
-		(it2->getServerTCP()).send(&request, sizeof(REQUEST));
-		(it2->getServerTCP()).send(&crash, sizeof(CRASH_INFO));
+		if (it2->getActive())
+		{
+			(it2->getServerTCP()).send(&request, sizeof(REQUEST));
+			(it2->getServerTCP()).send(&crash, sizeof(CRASH_INFO));
+		}
 	}
 	TCPMutex.unlock();
 
@@ -122,6 +135,7 @@ ServerTCP SharedMemory::getServerTCP(const string& token)
 		}
 	}
 	playersMutex.unlock();
+	std::cout << "aaa\n";
 	throw 0; // exceptions !!!
 }
 
@@ -130,7 +144,10 @@ void SharedMemory::sendTCPbroadcast(void* msg, size_t size)
 	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
-		(it->getServerTCP()).send(msg, size);
+		if (it->getActive())
+		{
+			(it->getServerTCP()).send(msg, size);
+		}
 	}
 	playersMutex.unlock();
 }
@@ -199,6 +216,7 @@ Player SharedMemory::getPlayer(const ServerTCP& server) const
 		}
 	}
 	playersMutex.unlock();
+	std::cout << "bbb\n";
 	throw 1; // exceptions !!!
 }
 
@@ -214,6 +232,7 @@ Player SharedMemory::getPlayer(const std::string& token) const
 		}
 	}
 	playersMutex.unlock();
+	std::cout << "ccc\n";
 	throw 2; // exceptions !!!
 }
 
@@ -229,6 +248,7 @@ Player SharedMemory::getPlayer(const int nr) const
 		}
 	}
 	playersMutex.unlock();
+	std::cout << "ddd\n";
 	throw 3; // exceptions !!!
 }
 
@@ -411,15 +431,17 @@ void SharedMemory::setStart()
 			it->getDirection(newTurn.move.direction);
 
 			TCPMutex.lock();
-			it->getServerTCP().send(&request, sizeof(REQUEST));
-			it->getServerTCP().send(&startInfo, sizeof(START_INFO));
-			
-			for (std::set<Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
+			if (it->getActive())
 			{
-				(it2->getServerTCP()).send(&turnToSend, sizeof(REQUEST));
-				(it2->getServerTCP()).send(&newTurn, sizeof(TURN_INFO));
+				it->getServerTCP().send(&request, sizeof(REQUEST));
+				it->getServerTCP().send(&startInfo, sizeof(START_INFO));
+				
+				for (std::set<Player>::iterator it2 = players.begin(); it2 != players.end(); it2++)
+				{
+					(it2->getServerTCP()).send(&turnToSend, sizeof(REQUEST));
+					(it2->getServerTCP()).send(&newTurn, sizeof(TURN_INFO));
+				}
 			}
-			
 			TCPMutex.unlock();
 
 			for (set<Player>::iterator it3 = players.begin(); it3 != players.end(); it3++)

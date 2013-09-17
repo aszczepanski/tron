@@ -28,7 +28,10 @@ void ServerSender::startGame()
 	request.length = 0; // TODO here token
 
 	mutex.lock();
-	client.send(&request, sizeof(REQUEST));
+	if (!sharedMemory.getEnd())
+	{
+		client.send(&request, sizeof(REQUEST));
+	}
 	mutex.unlock();
 }
 
@@ -40,7 +43,10 @@ void ServerSender::endGame()
 	request.length = 0;
 
 	mutex.lock();
-	client.send(&request, sizeof(REQUEST));
+	if (!sharedMemory.getEnd())
+	{
+		client.send(&request, sizeof(REQUEST));
+	}
 	mutex.unlock();
 }
 
@@ -54,10 +60,13 @@ void ServerSender::leaveGame()
 	std::string token = sharedMemory.getToken();
 
 	mutex.lock();
-	client.send(&request, sizeof(REQUEST));
-	for (int i=0; i<TOKEN_SIZE; i++)
+	if (!sharedMemory.getEnd())
 	{
-		client.send(&token[i], 1);
+		client.send(&request, sizeof(REQUEST));
+		for (int i=0; i<TOKEN_SIZE; i++)
+		{
+			client.send(&token[i], 1);
+		}
 	}
 	mutex.unlock();
 }
@@ -70,7 +79,10 @@ void ServerSender::registerClient()
 	request.request_type = REQUEST::REGISTER_TOKEN;
 
 	mutex.lock();
-	client.send(&request, sizeof(REQUEST));
+	if (!sharedMemory.getEnd())
+	{
+		client.send(&request, sizeof(REQUEST));
+	}
 	mutex.unlock();
 
 }
@@ -81,21 +93,11 @@ void ServerSender::sendTurn(common::Direction direction)
 	request.request_type = REQUEST::NEW_TURN;
 
 	mutex.lock();
-	client.send(&request, sizeof(REQUEST));
-	client.send(&direction, sizeof(common::Direction));
-	mutex.unlock();
-}
-
-void ServerSender::sendByte(unsigned char c)
-{
-	REQUEST request;
-	memset(&request, 0, sizeof(REQUEST));
-	request.request_type = REQUEST::NEW_TURN;
-	request.length = 1;
-
-	mutex.lock();
-	client.send(&request, sizeof(REQUEST));
-	client.send(&c, 1);
+	if (!sharedMemory.getEnd())
+	{
+		client.send(&request, sizeof(REQUEST));
+		client.send(&direction, sizeof(common::Direction));
+	}
 	mutex.unlock();
 }
 
@@ -107,6 +109,9 @@ void ServerSender::getStageInfo()
 	request.length = 0;
 
 	mutex.lock();
-	client.send(&request, sizeof(REQUEST));
+	if (!sharedMemory.getEnd())
+	{
+		client.send(&request, sizeof(REQUEST));
+	}
 	mutex.unlock();
 }
