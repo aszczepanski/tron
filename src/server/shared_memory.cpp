@@ -9,6 +9,7 @@
 #include <common/protocol.h>
 #include <cstring>
 #include <algorithm>
+#include <cmath>
 
 using namespace server;
 using namespace std;
@@ -252,7 +253,9 @@ Player SharedMemory::getPlayer(const int nr) const
 	throw 3; // exceptions !!!
 }
 
-bool checkPerpendicularIntersections(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float& x, float& y)
+static const float eps = 0.01;
+
+static bool checkPerpendicularIntersections(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float& x, float& y)
 {
 	if (y1 != y2 && y3 == y4)
 	{
@@ -282,7 +285,7 @@ bool checkPerpendicularIntersections(float x1, float y1, float x2, float y2, flo
 		std::swap(x3,x4);
 	}
 
-	if (y1 >= y3 && y1 <=y4 && x3 >= x1 && x3 <= x2)
+	if (y1 >= y3-eps && y1 <= y4+eps && x3 >= x1-eps && x3 <= x2+eps)
 	{
 		x = x3;
 		y = y1;
@@ -294,8 +297,6 @@ bool checkPerpendicularIntersections(float x1, float y1, float x2, float y2, flo
 
 void SharedMemory::checkIntersections()
 {
-	/* TODO check collisions */
-
 	map<int, vector<common::Move> > safeMoves;
 	getMoves(safeMoves);
 
@@ -341,7 +342,7 @@ void SharedMemory::checkIntersections()
 					//cout << crossX << " " << crossY << "\n";
 					//cout << getPlayer(j->first).getDistance(crossX, crossY) << std::endl;
 
-					if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive()
+					if (((fabs(crossX - headX1) > eps) || (fabs(crossY != headY1) > eps)) && getPlayer(i->first).getAlive()
 						&& getPlayer(i->first).getDistance(crossX, crossY) <= getPlayer(j->first).getDistance(crossX,crossY))
 					{
 						setDead(i->first);
@@ -353,28 +354,28 @@ void SharedMemory::checkIntersections()
 		float crossX, crossY;
 		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, FIELD_SIZE/2.0, crossX, crossY))
 		{
-			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
+			if (getPlayer(i->first).getAlive())
 			{
 				setDead(i->first);
 			}
 		}
 		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, crossX, crossY))
 		{
-			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
+			if (getPlayer(i->first).getAlive())
 			{
 				setDead(i->first);
 			}
 		}
 		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, -FIELD_SIZE/2.0, crossX, crossY))
 		{
-			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
+			if (getPlayer(i->first).getAlive())
 			{
 				setDead(i->first);
 			}
 		}
 		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, crossX, crossY))
 		{
-			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
+			if (getPlayer(i->first).getAlive())
 			{
 				setDead(i->first);
 			}
