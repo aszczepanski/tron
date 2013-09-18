@@ -79,6 +79,11 @@ void SharedMemory::keyEsc()
 	}
 }
 
+void SharedMemory::leaveGame()
+{
+	serverSender->leaveGame();
+}
+
 void SharedMemory::keyStart()
 {
 	if (host)

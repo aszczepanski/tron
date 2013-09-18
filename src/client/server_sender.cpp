@@ -52,6 +52,7 @@ void ServerSender::endGame()
 
 void ServerSender::leaveGame()
 {
+	std::cout << "aaaa\n";
 	REQUEST request;
 	bzero(&request, sizeof(REQUEST));
 	request.request_type = REQUEST::LEAVE_GAME;
@@ -69,6 +70,7 @@ void ServerSender::leaveGame()
 		}
 	}
 	mutex.unlock();
+	std::cout << "bbbb\n";
 }
 
 void ServerSender::registerClient()

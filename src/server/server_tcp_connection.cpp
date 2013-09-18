@@ -35,7 +35,7 @@ void* ServerTCPConnection::start_routine()
 		}
 		catch (...)
 		{
-			std::cout << "here\n";
+			std::cout << "SERVER read error exception\n";
 			break;
 		}
 
@@ -53,10 +53,11 @@ void* ServerTCPConnection::start_routine()
 
 			sharedMemory.setEnd();
 
-			sharedMemory.removeAllPlayers();
+			//sharedMemory.removeAllPlayers();
 
 			//break; ???
-			break;
+			//break;
+			std::cout << "SERVER TCP REQUEST END sent to clients\n";
 		}
 		else if (request.request_type == REQUEST::LEAVE_GAME)
 		{

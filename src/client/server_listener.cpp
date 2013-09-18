@@ -31,10 +31,12 @@ void* ServerListener::start_routine()
 		{
 			common::Logger::getInstance().debug("CLIENT TCP request end");
 
+			sharedMemory.leaveGame();
+
 			sharedMemory.setEnd();
 			std::cout << "\t\t" << sharedMemory.getEnd() << std::endl;
 
-			break;
+			//break;
 		}
 		else if (request.request_type == REQUEST::LEAVE_GAME)
 		{

@@ -31,6 +31,8 @@ public:
 
 	void keyStart();
 
+	void leaveGame();
+
 	bool setEnd();
 	bool getEnd() const;
 
