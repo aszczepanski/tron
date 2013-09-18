@@ -6,7 +6,7 @@
 struct PLAYER_INFO
 {
 	unsigned short player_no;
-	int x,y;
+	float x,y;
 	common::Direction direction;
 };
 

@@ -1,15 +1,15 @@
 #include <server/player.h>
-//#include <server/server_udp.h>
 #include <server/server_tcp.h>
 #include <string>
 #include <iostream>
+#include <cmath>
 
 using namespace server;
 using namespace std;
 
 unsigned int Player::highestPlayerNr = 0;
 
-Player::Player(const std::string& token, const ServerTCP& server, int x, int y, common::Direction direction)
+Player::Player(const std::string& token, const ServerTCP& server, float x, float y, common::Direction direction)
 	: token(token), serverTCP(server), nr(highestPlayerNr), x(x), y(y), direction(direction), alive(true), active(true)
 {
 	highestPlayerNr++;
@@ -91,7 +91,7 @@ unsigned int Player::getNr() const
 	return tmpNr;
 }
 
-void Player::getPosition(int& x, int& y) const
+void Player::getPosition(float& x, float& y) const
 {
 	mutex.lock();
 	x = this->x;
@@ -99,12 +99,20 @@ void Player::getPosition(int& x, int& y) const
 	mutex.unlock();
 }
 
-void Player::setPosition(int x, int y) const
+void Player::setPosition(float x, float y) const
 {
 	mutex.lock();
 	this->x = x;
 	this->y = y;
 	mutex.unlock();
+}
+
+float Player::getDistance(float xx, float yy)
+{
+	float curX, curY;
+	getPosition(curX, curY);
+
+	return fabs(xx-curX) + fabs(yy-curY);
 }
 
 void Player::getDirection(common::Direction& direction) const
@@ -125,21 +133,23 @@ void Player::updatePosition() const
 {
 	using namespace common;
 
+	const float dif = 0.2;
+
 	mutex.lock();
 
 	switch(direction)
 	{
 	case NORTH:
-		y++;
+		y += dif;
 		break;
 	case SOUTH:
-		y--;
+		y -= dif;
 		break;
 	case EAST:
-		x--;
+		x -= dif;
 		break;
 	case WEST:
-		x++;
+		x += dif;
 		break;
 	}
 
@@ -151,20 +161,17 @@ namespace server
 bool operator>(const Player& a, const Player& b)
 {
 	return a.token > b.token;
-//	return a.serverUDP > b.serverUDP;
 }
 
 bool operator<(const Player& a, const Player& b)
 {
 	return a.token < b.token;
-//	return a.serverUDP < b.serverUDP;
 }
 
 bool operator==(const Player& a, const Player& b)
 {
 	bool result;
 	return a.token == b.token;
-//	return a.serverUDP == b.serverUDP;
 }
 
 }

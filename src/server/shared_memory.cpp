@@ -8,7 +8,7 @@
 #include <vector>
 #include <common/protocol.h>
 #include <cstring>
-#include <server/geo.h>
+#include <algorithm>
 
 using namespace server;
 using namespace std;
@@ -179,7 +179,7 @@ void SharedMemory::getMoves(std::map<int, std::vector<common::Move> >& moves)
 	movesMutex.unlock();
 }
 
-void SharedMemory::setPosition(Player player, int x, int y)
+void SharedMemory::setPosition(Player player, float x, float y)
 {
 	playersMutex.lock();
 	for (set<Player>::iterator it = players.begin(); it != players.end(); it++)
@@ -252,6 +252,46 @@ Player SharedMemory::getPlayer(const int nr) const
 	throw 3; // exceptions !!!
 }
 
+bool checkPerpendicularIntersections(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float& x, float& y)
+{
+	if (y1 != y2 && y3 == y4)
+	{
+		std::swap(y1,y3);
+		std::swap(x1,x3);
+		std::swap(y2,y4);
+		std::swap(x2,x4);
+	}
+	else if (y1 != y2)
+	{
+		return false;
+	}
+
+	if (x3 != x4)
+	{
+		return false;
+	}
+
+	if (x2 < x1)
+	{
+		std::swap(x1,x2);
+		std::swap(y1,y2);
+	}
+	if (y4 < y3)
+	{
+		std::swap(y3,y4);
+		std::swap(x3,x4);
+	}
+
+	if (y1 >= y3 && y1 <=y4 && x3 >= x1 && x3 <= x2)
+	{
+		x = x3;
+		y = y1;
+		return true;
+	}
+
+	return false;
+}
+
 void SharedMemory::checkIntersections()
 {
 	/* TODO check collisions */
@@ -281,27 +321,28 @@ void SharedMemory::checkIntersections()
 		{
 			continue;
 		}
-		pkt p1 = { i->second[i->second.size()-2].x, i->second[i->second.size()-2].y };
-		pkt p2 = { i->second[i->second.size()-1].x, i->second[i->second.size()-1].y };
+		float headX1 = i->second[i->second.size()-2].x;
+		float headY1 = i->second[i->second.size()-2].y;
+		float headX2 = i->second[i->second.size()-1].x;
+		float headY2 = i->second[i->second.size()-1].y;
 		for (map<int,vector<common::Move> >::iterator j = safeMoves.begin(); j != safeMoves.end(); j++)
 		{
 			for (int k=0; k<(int)j->second.size()-1; k++)
 			{
-				
-				pkt p3 = { j->second[k].x, j->second[k].y };
-				pkt p4 = { j->second[k+1].x, j->second[k+1].y };
-				//cout << p1.x << " " << p1.y << "\t" << p2.x << " " << p2.y << endl;
-				//cout << p3.x << " " << p3.y << "\t" << p4.x << " " << p4.y << endl;
+				float X1 = j->second[k].x;
+				float Y1 = j->second[k].y;
+				float X2 = j->second[k+1].x;
+				float Y2 = j->second[k+1].y;
 
-				pair<int,pktd> w = przec(p1,p2,p3,p4);
-				if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
-					&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+				float crossX, crossY;
+				if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, X1, Y1, X2, Y2, crossX, crossY))
 				{
-					//cout << "\n\niiiiiiiiiiiiiiinnnnnnnnnnnnnnnntttttttttttttteeeeeeeeeeeeeeerrrrrrrrrrssssssssssseeeeeeeeeeeeccccccccccccttttttttt\n\n";
-					//cout << i->first << " " << j->first << endl<<endl;
-					//cout << (int)w.second.x << " " << (int)w.second.y << endl<<endl;
+					//cout << headX1 << " " << headY1 << " " << headX2 << " " << headY2 << " " << X1 << " " << Y1 << " " << X2 << " " << Y2 << "\n";
+					//cout << crossX << " " << crossY << "\n";
+					//cout << getPlayer(j->first).getDistance(crossX, crossY) << std::endl;
 
-					if (getPlayer(i->first).getAlive())
+					if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive()
+						&& getPlayer(i->first).getDistance(crossX, crossY) <= getPlayer(j->first).getDistance(crossX,crossY))
 					{
 						setDead(i->first);
 					}
@@ -309,59 +350,35 @@ void SharedMemory::checkIntersections()
 			}
 		}
 
+		float crossX, crossY;
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, FIELD_SIZE/2.0, crossX, crossY))
 		{
-			pkt p3 = { -FIELD_SIZE/2, -FIELD_SIZE/2 };
-			pkt p4 = { -FIELD_SIZE/2, FIELD_SIZE/2 };
-			pair<int,pktd> w = przec(p1,p2,p3,p4);
-			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
-				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
 			{
-				if (getPlayer(i->first).getAlive())
-				{
-					setDead(i->first);
-				}
+				setDead(i->first);
 			}
 		}
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, crossX, crossY))
 		{
-			pkt p3 = { -FIELD_SIZE/2, FIELD_SIZE/2 };
-			pkt p4 = { FIELD_SIZE/2, FIELD_SIZE/2 };
-			pair<int,pktd> w = przec(p1,p2,p3,p4);
-			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
-				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
 			{
-				if (getPlayer(i->first).getAlive())
-				{
-					setDead(i->first);
-				}
+				setDead(i->first);
 			}
 		}
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, -FIELD_SIZE/2.0, crossX, crossY))
 		{
-			pkt p3 = { FIELD_SIZE/2, FIELD_SIZE/2 };
-			pkt p4 = { FIELD_SIZE/2, -FIELD_SIZE/2 };
-			pair<int,pktd> w = przec(p1,p2,p3,p4);
-			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
-				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
 			{
-				if (getPlayer(i->first).getAlive())
-				{
-					setDead(i->first);
-				}
+				setDead(i->first);
 			}
 		}
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, crossX, crossY))
 		{
-			pkt p3 = { FIELD_SIZE/2, -FIELD_SIZE/2 };
-			pkt p4 = { -FIELD_SIZE/2, -FIELD_SIZE/2 };
-			pair<int,pktd> w = przec(p1,p2,p3,p4);
-			if (w.first == 0 && ((int)w.second.x != p1.x || (int)w.second.y != p1.y)
-				&& (p2.x == (int)w.second.x && p2.y == (int)w.second.y))
+			if ((crossX != headX1 || crossY != headY1) && getPlayer(i->first).getAlive())
 			{
-				if (getPlayer(i->first).getAlive())
-				{
-					setDead(i->first);
-				}
+				setDead(i->first);
 			}
 		}
-
 	}
 }
 

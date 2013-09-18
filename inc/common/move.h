@@ -14,7 +14,7 @@ enum Direction
 
 struct Move
 {
-	int x, y;
+	float x, y;
 	Direction direction;
 };
 

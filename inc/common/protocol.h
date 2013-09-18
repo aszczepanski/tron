@@ -7,7 +7,7 @@
 
 #define TOKEN_SIZE 20
 
-#define FIELD_SIZE 100
+const float FIELD_SIZE = 100.0;
 
 struct REQUEST
 {

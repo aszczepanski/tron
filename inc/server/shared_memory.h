@@ -24,16 +24,14 @@ public:
 	void removePlayer(const std::string& token, const ServerTCP&);
 	void removeAllPlayers();
 
-	//void sendUDPbroadcast(void* msg, size_t size);
 	void sendTCPbroadcast(void* msg, size_t size);
 
 	void addMove(Player player, common::Move move);
 	void getMoves(std::map<int, std::vector<common::Move> >&);
 
-	void setPosition(Player player, int x, int y);
+	void setPosition(Player player, float x, float y);
 	void getPlayers(std::vector<Player>& players);
 
-	//Player getPlayer(const ServerUDP&) const;
 	Player getPlayer(const ServerTCP&) const;
 	Player getPlayer(const std::string& token) const;
 	Player getPlayer(const int nr) const;
@@ -48,10 +46,8 @@ public:
 
 	void setDead(const int nr) const;
 
-	//static common::Mutex UDPMutex;
 	static common::Mutex TCPMutex;
 private:
-	//ServerUDP getServerUDP(const std::string& token);
 	ServerTCP getServerTCP(const std::string& token);
 	std::set<Player> players;
 	
