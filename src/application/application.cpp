@@ -34,7 +34,7 @@ void Application::run()
 
 		if (1 == n)
 		{
-			client::Application clientApp(false);
+			client::Application clientApp(false, "192.168.0.108");
 			clientApp.run();
 
 			client::OpenGLMain ogl(client::SharedMemory::getInstance());
