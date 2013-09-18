@@ -9,6 +9,7 @@
 #include <ctime>
 #include <vector>
 #include <common/mutex.h>
+#include <unistd.h>
 
 using namespace server;
 
