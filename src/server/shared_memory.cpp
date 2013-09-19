@@ -128,7 +128,6 @@ ServerTCP SharedMemory::getServerTCP(const string& token)
 	playersMutex.lock();
 	for (std::set<Player>::iterator it = players.begin(); it != players.end(); it++)
 	{
-		std::cout << token << " " << it->getToken() << std::endl;
 		if (it->getToken() == token)
 		{
 			playersMutex.unlock();
@@ -136,7 +135,6 @@ ServerTCP SharedMemory::getServerTCP(const string& token)
 		}
 	}
 	playersMutex.unlock();
-	std::cout << "aaa\n";
 	throw 0; // exceptions !!!
 }
 
@@ -160,8 +158,6 @@ void SharedMemory::addMove(Player player, common::Move move)
 	{
 		if (*it == player)
 		{
-			std::cout << "found\n";
-			std::cout << move.direction << std::endl;
 			it->setDirection(move.direction);
 			break;
 		}
@@ -217,7 +213,6 @@ Player SharedMemory::getPlayer(const ServerTCP& server) const
 		}
 	}
 	playersMutex.unlock();
-	std::cout << "bbb\n";
 	throw 1; // exceptions !!!
 }
 
@@ -233,7 +228,6 @@ Player SharedMemory::getPlayer(const std::string& token) const
 		}
 	}
 	playersMutex.unlock();
-	std::cout << "ccc\n";
 	throw 2; // exceptions !!!
 }
 
@@ -249,7 +243,6 @@ Player SharedMemory::getPlayer(const int nr) const
 		}
 	}
 	playersMutex.unlock();
-	std::cout << "ddd\n";
 	throw 3; // exceptions !!!
 }
 

@@ -32,9 +32,7 @@ void* Application::start_routine()
 		while (!sharedMemory.getEnd())
 		{
 			usleep(40000u);
-			std::cout << "a\n";
 			serverSender.getStageInfo();
-			std::cout << "b\n";
 		}
 
 		serverListener.wait();

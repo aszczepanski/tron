@@ -16,12 +16,14 @@ private:
 	static void keyDown(int c, int x, int y);
 	static void displayFrame();
 	static void nextFrame();
+	static void changeSize(int w, int h);
         static void loadTextures();
         static int passedTime();
         static void Init();
         static void drawBikes();
         static void drawTrails();
         static void drawPlayerTrail(PLAYER_INFO position, std::vector<TURN_INFO>& list);
+	static inline void drawEverything();
 
 	SharedMemory& sharedMemory;
 

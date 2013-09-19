@@ -19,10 +19,14 @@
 #include "tga.h"
 #include <vector>
 #include <iostream>
+#include <common/protocol.h>
 
 using namespace client;
 using glm::mat4;
 using glm::vec3;
+
+const unsigned int defaultWidth = 800, defaultHeight = 800;
+unsigned int curWidth, curHeight;
 
 std::vector<PLAYER_INFO> OpenGLMain::positions;
 std::vector<TURN_INFO> OpenGLMain::turns;
@@ -47,25 +51,43 @@ void OpenGLMain::start(){
   glutMainLoop();
 }
 
+glm::mat4 P;
+
+void OpenGLMain::drawEverything()
+{
+  glMatrixMode(GL_MODELVIEW);
+
+  Axis::draw(FIELD_SIZE/2);
+
+  drawBikes();
+  drawTrails();
+
+}
+
 void OpenGLMain::displayFrame() {
-  glClearColor(0.05,0.05, 0.05,1);
+  glClearColor(0.05f,0.05f,0.05f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glm::mat4 V = camera->LookAt();
   World::setV(V);
 
-  glm::mat4 P = glm::perspective(50.0f, 1.0f, 1.0f, 60.0f);
+//  glm::mat4 P = glm::perspective(50.0f, 1.0f, 1.0f, 160.0f);
 
   glMatrixMode(GL_PROJECTION);
   glLoadMatrixf(glm::value_ptr(P));
+  glViewport(0,0,curWidth,curHeight);
 
-  glMatrixMode(GL_MODELVIEW);
+  drawEverything();
 
-  int worldSize = 100;
-  Axis::draw(worldSize/2);
+  glClear(GL_DEPTH_BUFFER_BIT);
+  V = glm::lookAt(glm::vec3(positions[nr].x,positions[nr].y,22.0f), glm::vec3(positions[nr].x,positions[nr].y,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+  World::setV(V);
 
-  drawBikes();
-  drawTrails();
+  glMatrixMode(GL_PROJECTION);
+  glLoadMatrixf(glm::value_ptr(P));
+  glViewport(20,20,200,200);
+
+  drawEverything();
 
   glutSwapBuffers();
 }
@@ -147,6 +169,31 @@ void OpenGLMain::nextFrame()
   glutPostRedisplay();
 }
 
+void OpenGLMain::changeSize(int newWidth, int newHeight)
+{
+	if(newHeight == 0)
+	{
+		newHeight = 1;
+	}
+
+	curWidth = newWidth;
+	curHeight = newHeight;
+
+	float ratio = (float)curWidth/(float)curHeight;
+
+	// Use the Projection Matrix
+	glMatrixMode(GL_PROJECTION);
+	
+	// Reset Matrix
+	glLoadIdentity();
+	// Set the viewport to be the entire window
+	glViewport(0, 0, curWidth, curHeight);
+	// Set the correct perspective.
+	P = glm::perspective(50.0f,ratio,1.0f,160.0f);
+	// Get Back to the Modelview
+	glMatrixMode(GL_MODELVIEW);
+}
+
 int OpenGLMain::passedTime() {
   int actTime = glutGet(GLUT_ELAPSED_TIME);
   int interval = actTime - lastTime_;
@@ -165,8 +212,11 @@ void OpenGLMain::Init(){
   char* argv[] = { "./main" };
   glutInit(&argc, argv);
 
+  curWidth = defaultWidth;
+  curHeight = defaultHeight;
+
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(800,800);
+  glutInitWindowSize(curWidth,curHeight);
   glutInitWindowPosition(0,0);
   glutCreateWindow("Awesome Game");
 
@@ -174,6 +224,8 @@ void OpenGLMain::Init(){
 
   glutDisplayFunc(displayFrame);
   glutIdleFunc(nextFrame);
+
+  glutReshapeFunc(changeSize);
 
   glewInit();
   glutSpecialFunc(keyDown);
@@ -188,6 +240,11 @@ void OpenGLMain::Init(){
 
   // TODO remove TGA and create class managing all textures
   loadTextures();
+
+  SharedMemory::getInstance().getPositions(positions);
+  SharedMemory::getInstance().getTurns(turns);
+  SharedMemory::getInstance().getCrashes(crashes);
+  SharedMemory::getInstance().getPlayerNr(nr);
 }
 
 void OpenGLMain::keyDown(int c, int x, int y)
