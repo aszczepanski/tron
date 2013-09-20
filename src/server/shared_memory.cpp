@@ -246,23 +246,23 @@ Player SharedMemory::getPlayer(const int nr) const
 	throw 3; // exceptions !!!
 }
 
-static const float eps = 0.01;
+static const float eps = 0.01f;
 
 static bool checkPerpendicularIntersections(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float& x, float& y)
 {
-	if (y1 != y2 && y3 == y4)
+	if ((fabs(y1 - y2) >= eps) && (fabs(y3 - y4) <= eps))
 	{
 		std::swap(y1,y3);
 		std::swap(x1,x3);
 		std::swap(y2,y4);
 		std::swap(x2,x4);
 	}
-	else if (y1 != y2)
+	else if (fabs(y1 - y2) >= eps)
 	{
 		return false;
 	}
 
-	if (x3 != x4)
+	if (fabs(x3 - x4) >= eps)
 	{
 		return false;
 	}
@@ -345,28 +345,28 @@ void SharedMemory::checkIntersections()
 		}
 
 		float crossX, crossY;
-		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, FIELD_SIZE/2.0, crossX, crossY))
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0f, -FIELD_SIZE/2.0f, -FIELD_SIZE/2.0f, FIELD_SIZE/2.0f, crossX, crossY))
 		{
 			if (getPlayer(i->first).getAlive())
 			{
 				setDead(i->first);
 			}
 		}
-		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, crossX, crossY))
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, -FIELD_SIZE/2.0f, FIELD_SIZE/2.0f, FIELD_SIZE/2.0f, FIELD_SIZE/2.0f, crossX, crossY))
 		{
 			if (getPlayer(i->first).getAlive())
 			{
 				setDead(i->first);
 			}
 		}
-		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0, FIELD_SIZE/2.0, FIELD_SIZE/2.0, -FIELD_SIZE/2.0, crossX, crossY))
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0f, FIELD_SIZE/2.0f, FIELD_SIZE/2.0f, -FIELD_SIZE/2.0f, crossX, crossY))
 		{
 			if (getPlayer(i->first).getAlive())
 			{
 				setDead(i->first);
 			}
 		}
-		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, -FIELD_SIZE/2.0, crossX, crossY))
+		if (checkPerpendicularIntersections(headX1, headY1, headX2, headY2, FIELD_SIZE/2.0f, -FIELD_SIZE/2.0f, -FIELD_SIZE/2.0f, -FIELD_SIZE/2.0f, crossX, crossY))
 		{
 			if (getPlayer(i->first).getAlive())
 			{
