@@ -37,7 +37,7 @@ void Axis::draw(int size) {
     }
   glEnd();
 
-  glLineWidth(1.2f);
+  /*glLineWidth(1.2f);
   glBegin(GL_LINES);
     for(int i = -size; i < size; i++){
       glColor3f(0.4, 0.4, 0.4);
@@ -50,7 +50,7 @@ void Axis::draw(int size) {
       glVertex3f(i, -size, 0);
       glVertex3f(i, size, 0);
     }
-  glEnd();
+  glEnd();*/
 }
 
 }

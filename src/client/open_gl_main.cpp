@@ -44,7 +44,7 @@ OpenGLMain::OpenGLMain(SharedMemory& sharedMemory)
 
 void OpenGLMain::start(){
   lighting = new Lighting();
-  camera = new Camera();
+  camera = new Camera(FIELD_SIZE);
 
   Init();
 
@@ -61,6 +61,12 @@ void OpenGLMain::drawEverything()
 
   drawBikes();
   drawTrails();
+
+  mat4 M = World::transform(vec3(-FIELD_SIZE/2, -FIELD_SIZE/2, 0));
+  Box* box = new Box(glm::vec3(FIELD_SIZE, FIELD_SIZE, 1000));
+  box->draw(M);
+  delete box;
+
 
 }
 
@@ -167,6 +173,7 @@ void OpenGLMain::nextFrame()
   camera->Update(positions[nr], interval);
 
   glutPostRedisplay();
+  printf("int: %d\n",interval);
 }
 
 void OpenGLMain::changeSize(int newWidth, int newHeight)

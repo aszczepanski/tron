@@ -8,7 +8,7 @@ namespace client{
 
 class Camera {
  public:
-  Camera();
+  explicit Camera(int mapSize);
   ~Camera();
 
   void Update(PLAYER_INFO position, int interval);
@@ -17,11 +17,19 @@ class Camera {
  private:
 
   void UpdatePosition(int interval);
+  void KeepWithinMap();
+  bool IsPositonOutOfMap();
 
   glm::vec3 position_;
   glm::vec3 direction_;
   glm::vec3 nose_;
   glm::vec3 targetPosition_;
+
+  double rotation_;
+  double targetRotation_;
+  double rotationSpeed_;
+
+  int mapSize_;
 
   int speed_;
   double height_;
