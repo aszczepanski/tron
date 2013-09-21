@@ -4,6 +4,7 @@
 #include <client/camera.h>
 #include <client/world.h>
 #include <client/box.h>
+#include <client/trail.h>
 #include <client/axis.h>
 #include <client/texture_manager.h>
 #include <GL/glew.h>
@@ -124,7 +125,10 @@ void OpenGLMain::drawTrails() {
     int number = it->first;
     std::vector<TURN_INFO> list = it->second;
 
-    drawPlayerTrail(positions[number], list);
+    //drawPlayerTrail(positions[number], list);
+    //
+    Trail trail(positions[number], list, number);
+    trail.Draw();
   }
   //TODO
   glDisable(GL_BLEND);
@@ -148,6 +152,7 @@ void OpenGLMain::drawPlayerTrail(PLAYER_INFO position, std::vector<TURN_INFO> &l
     size.z = 1;
 
     mat4 M = World::transform(vec3(turn.move.x, turn.move.y, 0));
+
     Box* box = new Box(size);
 
     std::string texture;
@@ -210,8 +215,8 @@ int OpenGLMain::passedTime() {
 
 
 void OpenGLMain::loadTextures(){
-  TextureManager::importTexture("blue", "src/client/texture.png");
-  TextureManager::importTexture("red", "src/client/red_trail.png");
+  TextureManager::importTexture("red", "src/client/orange.png");
+  TextureManager::importTexture("blue", "src/client/red_trail.png");
 }
 
 void OpenGLMain::Init(){

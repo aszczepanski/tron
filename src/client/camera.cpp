@@ -6,8 +6,8 @@ namespace client {
 Camera::Camera(int mapSize) : mapSize_(mapSize){
   speed_ = 1.9;
   // TODO distance should change according to bike speed
-  height_ = 5;
-  distance_ = 10;
+  height_ = 8;
+  distance_ = 15;
   rotation_ = 0;
   rotationSpeed_ = 800;
   position_ = glm::vec3(0.0f, 0.0f, 15.0f);
@@ -21,7 +21,7 @@ Camera::~Camera() {
 void Camera::Update(PLAYER_INFO position, int interval) {
   direction_ = glm::vec3(position.x, position.y, 0.0f);
 
-  targetRotation_ = position.direction * 90.0;
+  targetRotation_ = position.direction * 90.0 + 8;
   targetPosition_ = glm::vec3(position.x, position.y, 0);
 
   UpdatePosition(interval);
