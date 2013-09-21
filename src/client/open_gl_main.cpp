@@ -5,6 +5,7 @@
 #include <client/world.h>
 #include <client/box.h>
 #include <client/trail.h>
+#include <client/shadow.h>
 #include <client/axis.h>
 #include <client/texture_manager.h>
 #include <GL/glew.h>
@@ -61,13 +62,13 @@ void OpenGLMain::drawEverything()
   Axis::draw(FIELD_SIZE/2);
 
   drawBikes();
-  drawTrails();
 
   mat4 M = World::transform(vec3(-FIELD_SIZE/2, -FIELD_SIZE/2, 0));
   Box* box = new Box(glm::vec3(FIELD_SIZE, FIELD_SIZE, 1000));
   box->draw(M);
   delete box;
 
+  drawTrails();
 
 }
 
@@ -129,6 +130,10 @@ void OpenGLMain::drawTrails() {
     //
     Trail trail(positions[number], list, number);
     trail.Draw();
+
+    Shadow shadow(positions[number], list, number);
+    shadow.Draw(0);
+    shadow.Draw(1);
   }
   //TODO
   glDisable(GL_BLEND);
@@ -215,8 +220,10 @@ int OpenGLMain::passedTime() {
 
 
 void OpenGLMain::loadTextures(){
-  TextureManager::importTexture("red", "src/client/orange.png");
-  TextureManager::importTexture("blue", "src/client/red_trail.png");
+  TextureManager::importTexture("red", "src/client/orange2.png");
+  TextureManager::importTexture("blue", "src/client/blue.png");
+  TextureManager::importTexture("shadow", "src/client/orange_shadow.png");
+  TextureManager::importTexture("darkshadow", "src/client/dark_shadow.png");
 }
 
 void OpenGLMain::Init(){

@@ -9,7 +9,7 @@ Camera::Camera(int mapSize) : mapSize_(mapSize){
   height_ = 8;
   distance_ = 15;
   rotation_ = 0;
-  rotationSpeed_ = 800;
+  rotationSpeed_ = 500;
   position_ = glm::vec3(0.0f, 0.0f, 15.0f);
   direction_ = glm::vec3(0.0f, 0.0f, 0.0f);
   nose_ = glm::vec3(0.0f, 0.0f, 1.0f);

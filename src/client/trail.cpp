@@ -82,8 +82,6 @@ float trailNormals[] = {
   1,0,1,
   1,0,1,
   1,0,1
-
-
 };
 
 int trailVerticesCount = 20;

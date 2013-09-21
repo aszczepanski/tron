@@ -116,7 +116,7 @@ void* ServerTCPConnection::start_routine()
 			newTurn.player_no = player.getNr();
 			newTurn.move.x = move.x;
 			newTurn.move.y = move.y;
-			newTurn.move.direction = direction;
+			newTurn.move.direction = move.direction;
 
 			SharedMemory::TCPMutex.lock();
 			sharedMemory.sendTCPbroadcast(&turnToSend, sizeof(REQUEST));
