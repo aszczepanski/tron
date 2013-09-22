@@ -287,12 +287,12 @@ void OpenGLMain::Init(){
   char* argv[] = { "./main" };
   glutInit(&argc, argv);
 
-  //model = new TexturedModel3D("models/light_cycle/", "HQ_Movie cycle.lwo");
+  model = new TexturedModel3D("models/light_cycle/", "HQ_Movie cycle.lwo");
+  //model = new TexturedModel3D("models/Virgin/", "Car.lwo"); /* uncomment this to see FORMULA1 */
   //model = new TexturedModel3D("models/Girl/", "girl.lwo");
   //model = new TexturedModel3D("models/Churchill tank Mk IV (A22)/", "churchill.lwo");
   //model = new TexturedModel3D("models/Sideswipe/", "RB-SideSwipe.lwo");
   //model = new TexturedModel3D("models/Ratchet/", "RB-Ratchet.lwo");
-  model = new TexturedModel3D("models/Virgin/", "Car.lwo");
 
   curWidth = defaultWidth;
   curHeight = defaultHeight;
