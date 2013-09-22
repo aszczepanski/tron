@@ -7,7 +7,7 @@ add_subdirectory(application)
 set(EXECUTABLE_OUTPUT_PATH ..)
 
 set(LIBS application server client)
-set(LIBS ${LIBS} pthread GL glut GLEW)
+set(LIBS ${LIBS} pthread GL glut GLEW assimp IL ILU ILUT)
 
 file(GLOB COMMON_SRCS common/*.cpp)
 

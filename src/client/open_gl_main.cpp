@@ -23,6 +23,8 @@
 #include <iostream>
 #include <common/protocol.h>
 
+#include <client/textured_model3d.h>
+
 using namespace client;
 using glm::mat4;
 using glm::vec3;
@@ -38,6 +40,8 @@ int nr;
 
 Camera* camera;
 Lighting* lighting;
+
+TexturedModel3D* model;
 
 OpenGLMain::OpenGLMain(SharedMemory& sharedMemory)
   : sharedMemory(sharedMemory)
@@ -101,14 +105,64 @@ void OpenGLMain::displayFrame() {
 }
 
 void OpenGLMain::drawBikes() {
-  for (int i = 0; i < positions.size(); i++) {
-    // TODO color
-    // TODO orientation
-    mat4 M = World::transform(vec3(positions[i].x-0.5, positions[i].y-0.5, 0));
-    Box* box = new Box(glm::vec3(1, 1, 1));
-    box->draw(M);
-    delete box;
-  }
+	for (int i = 0; i < positions.size(); i++) {
+		// TODO color
+		// TODO orientation
+		mat4 M = World::transform(vec3(positions[i].x-0.5, positions[i].y-0.5, 0));
+		M = glm::rotate(M, 90.0f, vec3(1.0f,0.0f,0.0f));
+		const float sc = 1.0f/1.0f;
+		M = glm::scale(M, vec3(sc,sc,sc));
+		if (positions[i].direction == common::NORTH)
+		{
+			M = glm::rotate(M, 180.0f, vec3(0.0f,1.0f,0.0f));
+		}
+		else if (positions[i].direction == common::SOUTH)
+		{
+			M = glm::rotate(M, 0.0f, vec3(0.0f,1.0f,0.0f));
+		}
+		else if (positions[i].direction == common::EAST)
+		{
+			M = glm::rotate(M, 90.0f, vec3(0.0f,-1.0f,0.0f));
+		}
+		else if (positions[i].direction == common::WEST)
+		{
+			M = glm::rotate(M, 90.0f, vec3(0.0f,1.0f,0.0f));
+		}
+		glLoadMatrixf(glm::value_ptr(World::getV() * M));
+
+		//TextureManager::setTexture(texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glDisable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+		//	  glEnableClientState(GL_VERTEX_ARRAY);
+		//	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		//	  glEnableClientState(GL_COLOR_ARRAY);
+		//	  glEnableClientState( GL_NORMAL_ARRAY );
+
+		model->draw();
+
+		//	glDisableClientState( GL_NORMAL_ARRAY );
+		//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		//	glDisableClientState(GL_VERTEX_ARRAY);
+		//	glDisableClientState(GL_COLOR_ARRAY);
+
+
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
+		//    Box* box = new Box(glm::vec3(1, 1, 1));
+		//    box->draw(M);
+		//    delete box;
+
+
+	}
 }
 
 void OpenGLMain::drawTrails() {
@@ -224,12 +278,21 @@ void OpenGLMain::loadTextures(){
   TextureManager::importTexture("blue", "src/client/blue.png");
   TextureManager::importTexture("shadow", "src/client/orange_shadow.png");
   TextureManager::importTexture("darkshadow", "src/client/dark_shadow.png");
+
+  model->loadGLTextures();
 }
 
 void OpenGLMain::Init(){
   int argc = 1;
   char* argv[] = { "./main" };
   glutInit(&argc, argv);
+
+  //model = new TexturedModel3D("models/light_cycle/", "HQ_Movie cycle.lwo");
+  //model = new TexturedModel3D("models/Girl/", "girl.lwo");
+  //model = new TexturedModel3D("models/Churchill tank Mk IV (A22)/", "churchill.lwo");
+  //model = new TexturedModel3D("models/Sideswipe/", "RB-SideSwipe.lwo");
+  //model = new TexturedModel3D("models/Ratchet/", "RB-Ratchet.lwo");
+  model = new TexturedModel3D("models/Virgin/", "Car.lwo");
 
   curWidth = defaultWidth;
   curHeight = defaultHeight;
