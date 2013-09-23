@@ -23,10 +23,10 @@ void Lighting::Init() {
 
   //glEnable(GL_LIGHT2);
 
-  GLfloat light2_ambient[] = { 1.0, 1.0, 1.0, 0.8 };
-  GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0, 0.5 };
-  GLfloat light2_specular[] = { 0.5, 0.5, 0.5, 1.0 };
-  GLfloat light2_position[] = { -2.0, -2.0, 12.0, 1.0 };
+  GLfloat light2_ambient[] = { 1.0, 1.0, 1.0, 0.7 };
+  GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0, 0.7 };
+  GLfloat light2_specular[] = { 1.0, 1.0, 1.0, 0.9 };
+  GLfloat light2_position[] = { 0.0, 0.0, 20.0, 1.0 };
 
   glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambient);
   glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);

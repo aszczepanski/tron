@@ -133,7 +133,7 @@ void Player::updatePosition() const
 {
 	using namespace common;
 
-	const float dif = 0.2;
+	const float dif = 0.4;
 
 	mutex.lock();
 

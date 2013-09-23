@@ -13,6 +13,7 @@ class Camera {
 
   void Update(PLAYER_INFO position, int interval);
   glm::mat4 LookAt();
+  glm::vec3 position();
 
  private:
 

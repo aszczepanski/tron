@@ -108,26 +108,28 @@ void OpenGLMain::drawBikes() {
 	for (int i = 0; i < positions.size(); i++) {
 		// TODO color
 		// TODO orientation
-		mat4 M = World::transform(vec3(positions[i].x-0.5, positions[i].y-0.5, 0));
+		mat4 M = World::transform(vec3(positions[i].x, positions[i].y, 0));
 		M = glm::rotate(M, 90.0f, vec3(1.0f,0.0f,0.0f));
 		const float sc = 1.0f/1.0f;
-		M = glm::scale(M, vec3(sc,sc,sc));
 		if (positions[i].direction == common::NORTH)
-		{
-			M = glm::rotate(M, 180.0f, vec3(0.0f,1.0f,0.0f));
-		}
-		else if (positions[i].direction == common::SOUTH)
-		{
-			M = glm::rotate(M, 0.0f, vec3(0.0f,1.0f,0.0f));
-		}
-		else if (positions[i].direction == common::EAST)
-		{
-			M = glm::rotate(M, 90.0f, vec3(0.0f,-1.0f,0.0f));
-		}
-		else if (positions[i].direction == common::WEST)
 		{
 			M = glm::rotate(M, 90.0f, vec3(0.0f,1.0f,0.0f));
 		}
+		else if (positions[i].direction == common::SOUTH)
+		{
+			M = glm::rotate(M, 90.0f, vec3(0.0f,-1.0f,0.0f));
+		}
+		else if (positions[i].direction == common::EAST)
+		{
+			M = glm::rotate(M, 180.0f, vec3(0.0f,1.0f,0.0f));
+		}
+		else if (positions[i].direction == common::WEST)
+		{
+			M = glm::rotate(M, 0.0f, vec3(0.0f,1.0f,0.0f));
+		}
+
+		M = glm::scale(M, vec3(0.8,0.8,0.5));
+
 		glLoadMatrixf(glm::value_ptr(World::getV() * M));
 
 		//TextureManager::setTexture(texture);
@@ -147,7 +149,14 @@ void OpenGLMain::drawBikes() {
 		//	  glEnableClientState(GL_COLOR_ARRAY);
 		//	  glEnableClientState( GL_NORMAL_ARRAY );
 
+
+                glEnable(GL_LIGHT2);
+                glm::vec3 pos = camera->position();
+                GLfloat light2_position[] = { pos.x, pos.y, pos.z, 1};
+                glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
+
 		model->draw();
+                glDisable(GL_LIGHT2);
 
 		//	glDisableClientState( GL_NORMAL_ARRAY );
 		//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

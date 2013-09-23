@@ -213,17 +213,17 @@ void TexturedModel3D::applyMaterial(const aiMaterial *mtl)
 		glBindTexture(GL_TEXTURE_2D, texId);
 	}
 
-	set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
+	set_float4(c, 0.9f, 0.9f, 0.9f, 1.0f);
 	if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
 		color4_to_float4(&diffuse, c);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, c);
 
-	set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+	set_float4(c, 0.9f, 0.9f, 0.9f, 1.0f);
 	if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
 		color4_to_float4(&specular, c);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, c);
 
-	set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
+	set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 	if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
 		color4_to_float4(&ambient, c);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, c);

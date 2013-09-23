@@ -6,8 +6,8 @@ namespace client {
 Camera::Camera(int mapSize) : mapSize_(mapSize){
   speed_ = 1.9;
   // TODO distance should change according to bike speed
-  height_ = 8;
-  distance_ = 15;
+  height_ = 15;
+  distance_ = 30;
   rotation_ = 0;
   rotationSpeed_ = 500;
   position_ = glm::vec3(0.0f, 0.0f, 15.0f);
@@ -92,6 +92,10 @@ bool Camera::IsPositonOutOfMap() {
 
 glm::mat4 Camera::LookAt() {
   return glm::lookAt(position_, direction_, nose_);
+}
+
+glm::vec3 Camera::position() {
+  return position_;
 }
 
 }  // namespace client
