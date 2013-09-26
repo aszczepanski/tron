@@ -22,7 +22,7 @@ struct REQUEST
 		REGISTER_TOKEN,
 		REGISTER_LISTENER
 	} request_type;
-	size_t length;
+	int length;
 };
 
 struct START_INFO
