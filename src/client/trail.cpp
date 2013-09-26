@@ -93,6 +93,14 @@ int trailVerticesCount = 20;
 Trail::~Trail() {}
 
 void Trail::Draw(){
+  std::string tex;
+  if (position_.player_no == 0)
+    tex = "p1trail";
+  else if (position_.player_no == 1)
+    tex = "p2trail";
+  else if (position_.player_no == 2)
+    tex = "p3trail";
+
   for(int i = 0; i < turns_.size(); i++){
     TURN_INFO turn = turns_[i];
 
@@ -117,7 +125,7 @@ void Trail::Draw(){
         M = World::transform(begin + vec3(-0.05f, 0.05f,0) , 0,0,-90);
       size.y = fabs(size.y) + 0.1;
 
-      DrawLine(M, size, "red");
+      DrawLine(M, size, tex);
     }
 
     // If we draw along Y
@@ -129,7 +137,7 @@ void Trail::Draw(){
         M = World::transform(begin + vec3(-0.05f, -0.05f,0), 0,0,0);
       size.y = fabs(size.y) + 0.1;
 
-      DrawLine(M, size, "red");
+      DrawLine(M, size, tex);
     }
   }
 
@@ -157,7 +165,6 @@ void Trail::DrawLine(mat4 M, vec3 dimensions, std::string texture){
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
 
 
   glEnableClientState(GL_VERTEX_ARRAY);

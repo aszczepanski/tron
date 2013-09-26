@@ -3,6 +3,7 @@
 namespace client {
 
 void Axis::draw(int size) {
+  return;
   glLoadMatrixf(glm::value_ptr(World::getV() * World::center()));
 
   glLineWidth(2.4f);

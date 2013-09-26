@@ -4,6 +4,7 @@
 #include <client/camera.h>
 #include <client/world.h>
 #include <client/box.h>
+#include <client/floor.h>
 #include <client/trail.h>
 #include <client/shadow.h>
 #include <client/axis.h>
@@ -41,7 +42,9 @@ int nr;
 Camera* camera;
 Lighting* lighting;
 
-TexturedModel3D* model;
+TexturedModel3D* model1;
+TexturedModel3D* model2;
+TexturedModel3D* model3;
 
 OpenGLMain::OpenGLMain(SharedMemory& sharedMemory)
   : sharedMemory(sharedMemory)
@@ -67,10 +70,15 @@ void OpenGLMain::drawEverything()
 
   drawBikes();
 
-  mat4 M = World::transform(vec3(-FIELD_SIZE/2, -FIELD_SIZE/2, 0));
+  mat4 M = World::transform(vec3(-FIELD_SIZE/2, -FIELD_SIZE/2, -0.01));
   Box* box = new Box(glm::vec3(FIELD_SIZE, FIELD_SIZE, 1000));
   box->draw(M);
   delete box;
+
+  M = World::transform(vec3(-FIELD_SIZE/2, -FIELD_SIZE/2, -0.99));
+  Floor* floor = new Floor(glm::vec3(FIELD_SIZE, FIELD_SIZE, 1));
+  floor->draw(M, "floor");
+  delete floor;
 
   drawTrails();
 
@@ -155,7 +163,15 @@ void OpenGLMain::drawBikes() {
                 GLfloat light2_position[] = { pos.x, pos.y, pos.z, 1};
                 glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
 
-		model->draw();
+                if (positions[i].player_no == 0)
+		  model1->draw();
+                else if (positions[i].player_no == 1)
+		  model2->draw();
+                else if (positions[i].player_no == 2)
+		  model3->draw();
+
+
+
                 glDisable(GL_LIGHT2);
 
 		//	glDisableClientState( GL_NORMAL_ARRAY );
@@ -283,12 +299,17 @@ int OpenGLMain::passedTime() {
 
 
 void OpenGLMain::loadTextures(){
-  TextureManager::importTexture("red", "src/client/orange2.png");
-  TextureManager::importTexture("blue", "src/client/blue.png");
-  TextureManager::importTexture("shadow", "src/client/orange_shadow.png");
-  TextureManager::importTexture("darkshadow", "src/client/dark_shadow.png");
+  TextureManager::importTexture("p3trail", "textures/p1trail.png");
+  TextureManager::importTexture("p1trail", "textures/p2trail.png");
+  TextureManager::importTexture("p2trail", "textures/p3trail.png");
+  TextureManager::importTexture("p3shadow", "textures/p1shadow.png");
+  TextureManager::importTexture("p1shadow", "textures/p2shadow.png");
+  TextureManager::importTexture("p2shadow", "textures/p3shadow.png");
+  TextureManager::importTexture("floor", "textures/floor.png");
 
-  model->loadGLTextures();
+  model1->loadGLTextures();
+  model2->loadGLTextures();
+  model3->loadGLTextures();
 }
 
 void OpenGLMain::Init(){
@@ -296,7 +317,10 @@ void OpenGLMain::Init(){
   char* argv[] = { "./main" };
   glutInit(&argc, argv);
 
-  model = new TexturedModel3D("models/light_cycle/", "HQ_Movie cycle.lwo");
+  model3 = new TexturedModel3D("models/light_cycle_1/", "HQ_Movie cycle.lwo");
+  model1 = new TexturedModel3D("models/light_cycle_2/", "HQ_Movie cycle.lwo");
+  model2 = new TexturedModel3D("models/light_cycle_3/", "HQ_Movie cycle.lwo");
+
   //model = new TexturedModel3D("models/Virgin/", "Car.lwo"); /* uncomment this to see FORMULA1 */
   //model = new TexturedModel3D("models/Girl/", "girl.lwo");
   //model = new TexturedModel3D("models/Churchill tank Mk IV (A22)/", "churchill.lwo");
@@ -360,4 +384,3 @@ void OpenGLMain::keyDown(int c, int x, int y)
       break;
   }
 }
-
