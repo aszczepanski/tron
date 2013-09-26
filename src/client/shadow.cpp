@@ -166,6 +166,32 @@ void Shadow::Draw(int placement){
     vec3 size = end - begin;
 
 
+    if( i != turns_.size()-1){
+      if ( (turns_[i].move.direction + 1) % 4  == (turns_[i+1].move.direction + 0) % 4) { // w prawo
+
+        if(turns_[i].move.direction == common::NORTH) //NORTH
+          AddCorner(end + vec3(0.05f, 0.05f, 0), 1, 1);
+        if(turns_[i].move.direction == common::EAST) //EAST
+          AddCorner(end + vec3(-0.05f, 0.05f, 0), -1, 1);
+        if(turns_[i].move.direction == common::SOUTH) //SOUTH
+          AddCorner(end + vec3(-0.05f, -0.05f, 0), -1, -1);
+        if(turns_[i].move.direction == common::WEST) //WEST
+          AddCorner(end + vec3(0.05f, -0.05f, 0), 1, -1);
+      }
+      else {
+
+        if(turns_[i].move.direction == common::NORTH) //NORTH
+          AddCorner(end + vec3(-0.05f, 0.05f, 0), -1, 1);
+        if(turns_[i].move.direction == common::EAST) //EAST
+          AddCorner(end + vec3(-0.05f, -0.05f, 0), -1, -1);
+        if(turns_[i].move.direction == common::SOUTH) //SOUTH
+          AddCorner(end + vec3(0.05f, -0.05f, 0), 1, -1);
+        if(turns_[i].move.direction == common::WEST) //WEST
+          AddCorner(end + vec3(0.05f, 0.05f, 0), 1, 1);
+
+      }
+    }
+
     mat4 M;
 
     // If we draw along X
@@ -201,20 +227,7 @@ void Shadow::Draw(int placement){
       AddY(begin, end);
     }
 
-    size.y = fabs(size.y) + 0.1;
-    if( i != turns_.size()-1){
-      if ( (turns_[i].move.direction + 1) % 4  == (turns_[i+1].move.direction + 0) % 4) { // w prawo
-        M = glm::translate(M, size);
-        M = World::transform(M, vec3(0), 0, 0, 0);
-        DrawCorner(M, tex, placement);
 
-      }
-      else {
-        M = glm::translate(M, size);
-        M = World::transform(M, vec3(-0.1,0,0), 0, 0, 90);
-        DrawCorner(M, tex, placement);
-      }
-    }
   }
   DrawAll(tex, 0);
   DrawAll(tex, 1);
@@ -264,6 +277,36 @@ void Shadow::AddX(vec3 begin, vec3 end) {
     swap(nd_[i], nd_[i+1]);
     swap(nu_[i], nu_[i+1]);
   }
+}
+
+
+void Shadow::AddCorner(vec3 pos, int x, int y) {
+  for(int i = 0; i < shadowCornerVerticesCount/2 * 3; i+=3){
+    vd_.push_back(shadowCornerVertices[i] * x + pos.x);
+    vd_.push_back(shadowCornerVertices[i+1] * y + pos.y);
+    vd_.push_back(shadowCornerVertices[i+2]);
+  }
+  for(int i = shadowCornerVerticesCount/2 * 3; i < shadowCornerVerticesCount * 3; i+=3){
+    vu_.push_back(shadowCornerVertices[i] * x + pos.x);
+    vu_.push_back(shadowCornerVertices[i+1] * y + pos.y);
+    vu_.push_back(shadowCornerVertices[i+2]);
+  }
+
+  for(int i = 0; i < shadowCornerVerticesCount/2 / 4 * 8; i++) {
+    td_.push_back(shadowCornerTexCoords[i]);
+  }
+  for(int i = shadowCornerVerticesCount/2 / 4 * 8; i < shadowCornerVerticesCount / 4 * 8; i++) {
+    tu_.push_back(shadowCornerTexCoords[i]);
+  }
+
+  for(int i = 0; i < shadowCornerVerticesCount/2 * 3; i++) {
+    nd_.push_back(shadowCornerNormals[i]);
+  }
+  for(int i = shadowCornerVerticesCount/2 * 3; i < shadowCornerVerticesCount * 3; i++) {
+    nu_.push_back(shadowCornerNormals[i]);
+  }
+  cd_+= shadowCornerVerticesCount/2;
+  cu_+= shadowCornerVerticesCount/2;
 }
 
 

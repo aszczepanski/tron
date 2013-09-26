@@ -27,6 +27,7 @@ class Shadow {
 
   void AddX(glm::vec3 begin, glm::vec3 end);
   void AddY(glm::vec3 begin, glm::vec3 end);
+  void AddCorner(glm::vec3 pos, int x, int y);
 
   void DrawAll(std::string texture, int placement);
 
