@@ -6,10 +6,10 @@ namespace client {
 Camera::Camera(int mapSize) : mapSize_(mapSize){
   speed_ = 1.9;
   // TODO distance should change according to bike speed
-  height_ = 15;
-  distance_ = 30;
+  height_ = 13;
+  distance_ = 25;
   rotation_ = 0;
-  rotationSpeed_ = 500;
+  rotationSpeed_ = 440;
   position_ = glm::vec3(0.0f, 0.0f, 15.0f);
   direction_ = glm::vec3(0.0f, 0.0f, 0.0f);
   nose_ = glm::vec3(0.0f, 0.0f, 1.0f);

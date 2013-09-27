@@ -71,8 +71,8 @@ void OpenGLMain::drawEverything()
   drawBikes();
 
   mat4 M = World::transform(vec3(-FIELD_SIZE/2, -FIELD_SIZE/2, -0.01));
-  Box* box = new Box(glm::vec3(FIELD_SIZE, FIELD_SIZE, 1000));
-  box->draw(M);
+  Box* box = new Box(glm::vec3(FIELD_SIZE, FIELD_SIZE, FIELD_SIZE*12));
+  box->draw(M, "wall");
   delete box;
 
   M = World::transform(vec3(-FIELD_SIZE/2, -FIELD_SIZE/2, -0.99));
@@ -306,6 +306,7 @@ void OpenGLMain::loadTextures(){
   TextureManager::importTexture("p1shadow", "textures/p2shadow.png");
   TextureManager::importTexture("p2shadow", "textures/p3shadow.png");
   TextureManager::importTexture("floor", "textures/floor.png");
+  TextureManager::importTexture("wall", "textures/wall.png");
 
   model1->loadGLTextures();
   model2->loadGLTextures();
